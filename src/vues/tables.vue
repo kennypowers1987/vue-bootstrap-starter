@@ -2,15 +2,16 @@
     <div>
         <b-jumbotron header="Tables" lead="Example Table Component for Vue.js 2" v-bind:text-variant="theme"></b-jumbotron>
         <div class="container">
-            <b-card v-bind:bg-variant="theme" title="Basic">
+            <b-card  v-bind:text-variant="theme" title="Basic">
                 <div class="white">
                     <b-table striped hover :items="items" bordered="bordered"></b-table>
 
                 </div>
-            </b-card></br>
+            </b-card>
+            <br>
             <ul v-if="errors && errors.length"><li v-for="error of errors" v-bind:key="error.id">{{error.message}}</li></ul>
-            <b-card v-bind:bg-variant="theme" title="Pagination w/ data loaded via HTTP">            
-            </br>
+            <b-card v-bind:text-variant="theme" title="Pagination w/ data loaded via HTTP">            
+            <br>
             <vue-simple-spinner size="big" message="Loading Table..." v-if="posts.length < 1" ></vue-simple-spinner>
             <div class="white scroll" v-if="posts && posts.length">
               <div> <strong class="label">Per Page:</strong>
@@ -21,8 +22,8 @@
                              v-bind:per-page="perPage"
                              bordered="bordered">
                     </b-table>
-                    <div class="pagination">                        
-                        <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" v-bind:text-variant="theme" class="my-0 pagination" />
+                    <div class="pagination" v-bind:class="theme">                        
+                        <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0 pagination" />
                     </div>
             </div>
             </b-card>

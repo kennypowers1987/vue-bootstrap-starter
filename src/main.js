@@ -3,18 +3,21 @@ import VueRouter from 'vue-router'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import "./styles/test.css";
+import "./styles/test.scss";
 import nav from './vues/navbar'
 import router from './config/router'
 import VueTruncate from 'vue-truncate-filter'
 import VueLocalStorage from 'vue-localstorage'
 import Vuex from 'vuex'
 import Spinner from 'vue-simple-spinner'
+import infiniteScroll from 'vue-infinite-scroll'
 
 Vue.use(BootstrapVue)
 Vue.use(VueTruncate)
 Vue.use(VueLocalStorage)
 Vue.use(Vuex)
+Vue.use(infiniteScroll)
+
 Vue.component('navbar', nav);
 Vue.component('vue-simple-spinner', Spinner)
 
