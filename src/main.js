@@ -4,8 +4,8 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import "./styles/test.scss";
-import nav from './vues/navbar'
-import router from './config/router'
+import nav from './vues/MyNav'
+import router from './config/myRouter'
 import VueTruncate from 'vue-truncate-filter'
 import VueLocalStorage from 'vue-localstorage'
 import Vuex from 'vuex'
@@ -28,7 +28,7 @@ if (!Vue.localStorage.get('theme')) {
 router.replace('/modals')
 
 const app = new Vue({
-  components: nav,  
+  components: nav,
   router,
   Spinner
 }).$mount('#app')
