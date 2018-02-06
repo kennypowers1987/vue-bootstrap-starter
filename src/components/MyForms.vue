@@ -28,7 +28,7 @@
 <script>
 import Vue from "vue";
 import VueLocalStorage from "vue-localstorage";
-import { EventBus } from "../config/myEventBus";
+import { EventBus } from "../utils/myEventBus";
 
 export default {
   data: function() {
@@ -54,8 +54,7 @@ export default {
     };
   },
   created() {
-    this.$bus.$on("theme-changed", $event => {
-      console.log(Vue.localStorage.get("theme"), $event);
+    this.$bus.$on("theme-changed", $event => {      
       this.updateTheme();
     });
   },

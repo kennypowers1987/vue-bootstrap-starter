@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-jumbotron header="Cards" lead="Example Card Components for Vue.js 2, text loaded via Axios HTTP " v-bind:text-variant="theme">
+    <b-jumbotron :header="header" :lead="lead" v-bind:text-variant="theme">
     </b-jumbotron>
     <div id="cards" class="container">
       <vue-simple-spinner size="big" message="Loading Cards..." v-if="posts.length < 1"></vue-simple-spinner>
@@ -24,7 +24,7 @@
 <script>
 import Vue from "vue";
 import VueLocalStorage from "vue-localstorage";
-import { EventBus } from "../config/myEventBus";
+import { EventBus } from "../utils/myEventBus";
 import { HTTP } from "../services/fakeData";
 Vue.use(VueLocalStorage);
 export default {
@@ -34,12 +34,14 @@ export default {
       msg: "Welcome!",
       posts: [],
       errors: [],
-      theme: Vue.localStorage.get("theme")
+      theme: Vue.localStorage.get("theme"),
+      header: "Cards",
+      lead: "Example Card Components for Vue.js 2"
     };
   },
   // Fetches posts when the component is created.
   created() {
-    HTTP.get(`posts`)
+    HTTP.get(`http://jsonplaceholder.typicode.com/posts`)
       .then(response => {
         this.posts = response.data;
       })
@@ -47,7 +49,6 @@ export default {
         this.errors.push(e);
       });
     this.$bus.$on("theme-changed", $event => {
-      console.log(Vue.localStorage.get("theme"), $event);
       this.updateTheme();
     });
   },
@@ -62,6 +63,6 @@ export default {
 
 <style lang="scss" scoped>
 .card {
-  margin: 5px !important;
+  margin: 5px;
 }
 </style>

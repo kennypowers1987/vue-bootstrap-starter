@@ -41,7 +41,7 @@ const items = [
 
 import Vue from "vue";
 import VueLocalStorage from "vue-localstorage";
-import { EventBus } from "../config/myEventBus";
+import { EventBus } from "../utils/myEventBus";
 import { HTTP } from "../services/fakeData";
 
 Vue.use(VueLocalStorage);
@@ -57,14 +57,14 @@ export default {
       currentPage: 1,
       perPage: 10,
       totalRows: 1,
-      pageOptions: [5, 10, 15],
+      pageOptions: [5, 10, 15, 20, 25, 50, 100],
       sortBy: null,
       sortDesc: false,
       filter: null
     };
   },
   created() {
-    HTTP.get(`posts`)
+    HTTP.get(`http://jsonplaceholder.typicode.com/posts`)
       .then(response => {
         this.posts = response.data;
         this.totalRows = this.posts.length;
@@ -72,8 +72,7 @@ export default {
       .catch(e => {
         this.errors.push(e);
       });
-    this.$bus.$on("theme-changed", $event => {
-      console.log(Vue.localStorage.get("theme"), $event);
+    this.$bus.$on("theme-changed", $event => {      
       this.updateTheme();
     });
   },

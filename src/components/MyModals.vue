@@ -1,7 +1,8 @@
 <template id="modals">
   <div>
-    <b-jumbotron header="Modals" lead="Example Modal Components for Vue.js 2" v-bind:text-variant="theme">
-      <b-btn v-b-modal.myModal v-bind:variant="theme">Show Basic Modal</b-btn>
+    <b-jumbotron header="Modals" lead="Example Modal Components for Vue.js 2" v-bind:text-variant="theme">      
+    </b-jumbotron>
+    <b-btn v-b-modal.myModal v-bind:variant="theme">Show Basic Modal</b-btn>
       <b-btn v-b-modal.modalPrevent v-bind:variant="theme">Show Form Modal</b-btn>
       <!-- Main UI -->
 
@@ -15,7 +16,6 @@
         Submitted Names:
         <b-alert v-bind:key="n" v-for="n in names" :variant="theme" show class="mt-1 mb-1 centered">{{n}}</b-alert>
       </div>
-    </b-jumbotron>
     <b-modal id="myModal" :header-bg-variant="theme" :ok-variant="theme">
       Hello From My Modal!
     </b-modal>
@@ -26,7 +26,7 @@
 <script>
 import Vue from "vue";
 import VueLocalStorage from "vue-localstorage";
-import { EventBus } from "../config/myEventBus";
+import { EventBus } from "../utils/myEventBus";
 Vue.use(VueLocalStorage);
 
 export default {
@@ -39,8 +39,7 @@ export default {
     };
   },
   created() {
-    this.$bus.$on("theme-changed", $event => {
-      console.log(Vue.localStorage.get("theme"), $event);
+    this.$bus.$on("theme-changed", $event => {      
       this.updateTheme();
     });
   },
