@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import "./styles/test.scss";
+import "./styles/global.scss";
 import nav from './components/MyNav'
 import router from './utils/myRouter'
 import VueTruncate from 'vue-truncate-filter'
@@ -24,7 +24,7 @@ Vue.component('vue-simple-spinner', Spinner)
 Vue.component('status-bar', statusBar)
 
 if (!Vue.localStorage.get('theme')) {
-  Vue.localStorage.set('theme', 'primary')
+  Vue.localStorage.set('theme', 'light')
 };
 
 router.replace('/dashboard')
