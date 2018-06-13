@@ -6,12 +6,14 @@
       <div id="cards" class="container container-fluid">
         <div>
                <b-dropdown id="ddown1" v-bind:variant="theme" style="margin-left:-1vw">
-               <b-dropdown-item>First Action</b-dropdown-item>
-               <b-dropdown-item>Second Action</b-dropdown-item>
-               <b-dropdown-item>Third Action</b-dropdown-item>
+               <b-dropdown-item>Buyers</b-dropdown-item>
+               <b-dropdown-item>Agents</b-dropdown-item>
+               <b-dropdown-item>Loan Officers</b-dropdown-item>
+               <b-dropdown-item>Lenders</b-dropdown-item>
+               <b-dropdown-item>Brokers</b-dropdown-item>               
                <b-dropdown-divider></b-dropdown-divider>
-               <b-dropdown-item>Something else here...</b-dropdown-item>
-               <b-dropdown-item disabled>Disabled action</b-dropdown-item>
+               <b-dropdown-item>Reports</b-dropdown-item>
+               <b-dropdown-item disabled>Upgrade</b-dropdown-item>
             </b-dropdown>
             </div>
          <vue-simple-spinner size="big" message="Loading Cards..." v-if="contactCards.length < 1"></vue-simple-spinner>
@@ -91,7 +93,4 @@ img{
   padding:15%;
   width:85%;
 }
-
-
-
 </style>
