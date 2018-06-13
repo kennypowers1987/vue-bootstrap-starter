@@ -6,7 +6,10 @@
       </b-navbar-brand>
       <b-collapse is-nav id="nav_collapse">
          <b-navbar-nav>
-            <b-nav-item to="/dashboard">Dashboard</b-nav-item>
+            <!-- <b-nav-item to="/dashboard"></b-nav-item>
+            <b-nav-item>
+            
+            </b-nav-item> -->
             <!-- <b-nav-item to="/tables">Tables</b-nav-item>
                <b-nav-item to="/modals">Modals</b-nav-item>
                <b-nav-item to="/forms">Forms</b-nav-item> -->

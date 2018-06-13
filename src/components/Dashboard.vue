@@ -1,37 +1,48 @@
 <template>
-  <div>
-    <!-- <b-jumbotron :header="header" 
-                 :lead="lead" v-bind:text-variant="theme">
-    </b-jumbotron>     -->
-    <div id="cards" class="container container-fluid">
-      <vue-simple-spinner size="big" message="Loading Cards..." v-if="contactCards.length < 1"></vue-simple-spinner>
-      <div v-if="contactCards && contactCards.length" class="row card-container">        
-        <b-card v-for="card of contactCards" 
-                img-src='https://image.flaticon.com/icons/svg/149/149066.svg'
-                img-alt="Image"
-                img-top 
-                v-bind:key="card.cardType" 
-                v-bind:text-variant="theme" 
-                v-bind:bg-variant="theme" 
-                :title="card.name" 
-                tag="article" 
-                class="col-sm-12 col-md-4 card">
-          <div class="card-text">
-            <label>{{card.phone}}</label>            
-          </div>
-          <div class="card-text">           
-            <label>{{card.email}}</label>
-            <br /> {{card.address}}
-          </div>
-        </b-card>
+   <div>
+      <!-- <b-jumbotron :header="header" 
+         :lead="lead" v-bind:text-variant="theme">
+         </b-jumbotron>     -->
+      <div id="cards" class="container container-fluid">
+        <div>
+               <b-dropdown id="ddown1" v-bind:variant="theme" style="margin-left:-1vw">
+               <b-dropdown-item>First Action</b-dropdown-item>
+               <b-dropdown-item>Second Action</b-dropdown-item>
+               <b-dropdown-item>Third Action</b-dropdown-item>
+               <b-dropdown-divider></b-dropdown-divider>
+               <b-dropdown-item>Something else here...</b-dropdown-item>
+               <b-dropdown-item disabled>Disabled action</b-dropdown-item>
+            </b-dropdown>
+            </div>
+         <vue-simple-spinner size="big" message="Loading Cards..." v-if="contactCards.length < 1"></vue-simple-spinner>
+         <div v-if="contactCards && contactCards.length" class="row card-container">            
+            <b-card v-for="card of contactCards" 
+               img-src='https://image.flaticon.com/icons/svg/149/149066.svg'
+               img-alt="Image"
+               img-top 
+               v-bind:key="card.cardType" 
+               v-bind:text-variant="theme" 
+               v-bind:bg-variant="theme" 
+               :title="card.name" 
+               tag="article" 
+               class="col-sm-12 col-md-4 card">
+               
+               <div class="card-text">
+                  <label>{{card.phone}}</label>            
+               </div>
+               <div class="card-text">           
+                  <label>{{card.email}}</label>
+                  <br /> {{card.address}}
+               </div>
+            </b-card>
+         </div>
+         <ul v-if="errors && errors.length">
+            <li v-for="error of errors" v-bind:key="error.id">
+               {{error.message}}
+            </li>
+         </ul>
       </div>
-      <ul v-if="errors && errors.length">
-        <li v-for="error of errors" v-bind:key="error.id">
-          {{error.message}}
-        </li>
-      </ul>
-    </div>
-  </div>
+   </div>
 </template>
 
 <script>
@@ -78,6 +89,9 @@ export default {
 <style lang="scss" scoped>
 img{
   padding:15%;
+  width:85%;
 }
+
+
 
 </style>
