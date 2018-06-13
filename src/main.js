@@ -11,6 +11,7 @@ import VueLocalStorage from 'vue-localstorage'
 import Vuex from 'vuex'
 import Spinner from 'vue-simple-spinner'
 import infiniteScroll from 'vue-infinite-scroll'
+import statusBar from './components/StatusBar.vue'
 
 Vue.use(BootstrapVue)
 Vue.use(VueTruncate)
@@ -20,12 +21,13 @@ Vue.use(infiniteScroll)
 
 Vue.component('navbar', nav);
 Vue.component('vue-simple-spinner', Spinner)
+Vue.component('status-bar', statusBar)
 
 if (!Vue.localStorage.get('theme')) {
   Vue.localStorage.set('theme', 'primary')
 };
 
-router.replace('/modals')
+router.replace('/dashboard')
 
 const app = new Vue({
   components: nav,

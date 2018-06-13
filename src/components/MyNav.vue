@@ -2,14 +2,14 @@
   <b-navbar toggleable="md" type="dark" v-bind:variant="theme" class="sticky">
     <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
     <b-navbar-brand href="#">
-      <img src="src/assets/logo.png" style="width:25px;">
+      <img src="src/assets/logo.png" style="width:90px;">
     </b-navbar-brand>
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav>
-        <b-nav-item to="/cards">Cards</b-nav-item>
-        <b-nav-item to="/tables">Tables</b-nav-item>
+        <b-nav-item to="/dashboard">Dashboard</b-nav-item>
+        <!-- <b-nav-item to="/tables">Tables</b-nav-item>
         <b-nav-item to="/modals">Modals</b-nav-item>
-        <b-nav-item to="/forms">Forms</b-nav-item>
+        <b-nav-item to="/forms">Forms</b-nav-item> -->
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
         <b-nav-item-dropdown text="Theme" right>

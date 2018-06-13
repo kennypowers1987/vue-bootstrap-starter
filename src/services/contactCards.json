@@ -1,0 +1,25 @@
+[
+  {
+    "cardType": "loanOfficer",
+    "name": "Lenny Loan Officer",
+    "phone": "281-330-8004",
+    "email": "LoanOfficer@spritere.com",
+    "address": "500 BH Drive, Beverly Hills, CA 90210"
+
+  },
+  {
+    "cardType": "buyer",
+    "name": "Benny Buyer",
+    "phone": "281-330-8006",
+    "email": "buyer@gmail.com",
+    "address": "200 BH Street, Beverly Hills, CA 90210"
+
+  },
+  {
+    "cardType": "agent",
+    "name": "Annie Agent",
+    "phone": "281-552-8006",
+    "email": "agent@gmail.com",
+    "address": "952 BH Drive, Beverly Hills, CA 90210"
+  }
+]

@@ -1,14 +1,26 @@
 <template>
   <div>
-    <b-jumbotron :header="header" :lead="lead" v-bind:text-variant="theme">
-    </b-jumbotron>
+    <b-jumbotron :header="header" 
+                 :lead="lead" v-bind:text-variant="theme">
+    </b-jumbotron>    
     <div id="cards" class="container">
-      <vue-simple-spinner size="big" message="Loading Cards..." v-if="posts.length < 1"></vue-simple-spinner>
-      <div v-if="posts && posts.length" class="row">
-        <b-card v-for="post of posts" v-bind:key="post.id" v-bind:text-variant="theme" bg-variant="default" :title="post.id.toString()" tag="article" class="col-sm-2 card">
+      <status-bar></status-bar>
+      <vue-simple-spinner size="big" message="Loading Cards..." v-if="contactCards.length < 1"></vue-simple-spinner>
+      <div v-if="contactCards && contactCards.length" class="row card-container">
+        <b-card v-for="card of contactCards" 
+                img-src='https://image.flaticon.com/icons/svg/149/149066.svg'
+                img-alt="Image"
+                img-top 
+                v-bind:key="card.cardType" 
+                v-bind:text-variant="theme" 
+                bg-variant="default" 
+                :title="card.name" 
+                tag="article" 
+                class="col-sm-3 card">
           <p class="card-text">
-            <strong>{{post.title | truncate(25)}}</strong>
-            <br /> {{post.body | truncate(50) }}
+            <strong>{{card.phone}}</strong>
+            <strong>{{card.email}}</strong>
+            <br /> {{card.address}}
           </p>
         </b-card>
       </div>
@@ -28,22 +40,23 @@ import { EventBus } from "../utils/myEventBus";
 import { HTTP } from "../services/fakeData";
 Vue.use(VueLocalStorage);
 export default {
-  name: "cards",
+  name: "dashboard",
   data() {
     return {
       msg: "Welcome!",
       posts: [],
+      contactCards: [],
       errors: [],
       theme: Vue.localStorage.get("theme"),
-      header: "Cards",
-      lead: "Example Card Components for Vue.js 2"
+      header: "Dashboard",
+      //lead: "Example Card Components for Vue.js 2"
     };
   },
   // Fetches posts when the component is created.
   created() {
-    HTTP.get(`http://jsonplaceholder.typicode.com/posts`)
+    HTTP.get(`src/services/contactCards.json`)
       .then(response => {
-        this.posts = response.data;
+        this.contactCards = response.data;
       })
       .catch(e => {
         this.errors.push(e);
@@ -62,6 +75,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.card-container{
+  margin:5%
+}
 .card {
   margin: 5px;
 }

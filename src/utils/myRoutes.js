@@ -1,17 +1,18 @@
-import cards from '../components/MyCards.vue'
+import dashboard from '../components/Dashboard.vue'
 import tables from '../components/MyTables.vue'
 import modals from '../components/MyModals.vue'
 import forms from '../components/MyForms.vue'
+
 
 const Tables = {
   routes,
   render: h => h(tables)
 }
 
-const Cards = {
-  //template: '#cards',
+const Dashboard = {
+  //template: '#dashboard',
   routes,
-  render: h => h(cards)
+  render: h => h(dashboard)
 }
 
 const Modals = {
@@ -31,8 +32,8 @@ const routes = [{
     component: Tables
   },
   {
-    path: '/cards',
-    component: Cards
+    path: '/dashboard',
+    component: Dashboard
   },
   {
     path: '/modals',
