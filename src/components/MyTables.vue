@@ -32,70 +32,72 @@
 </template>
 
 <script>
-const items = [
-  { isActive: true, age: 40, first_name: "Dickerson", last_name: "Macdonald" },
-  { isActive: false, age: 21, first_name: "Larsen", last_name: "Shaw" },
-  { isActive: false, age: 89, first_name: "Geneva", last_name: "Wilson" },
-  { isActive: true, age: 38, first_name: "Jami", last_name: "Carney" }
-];
+	const items = [
+		{ isActive: true, age: 40, first_name: "Dickerson", last_name: "Macdonald" },
+		{ isActive: false, age: 21, first_name: "Larsen", last_name: "Shaw" },
+		{ isActive: false, age: 89, first_name: "Geneva", last_name: "Wilson" },
+		{ isActive: true, age: 38, first_name: "Jami", last_name: "Carney" }
+	];
 
-import Vue from "vue";
-import VueLocalStorage from "vue-localstorage";
-import { EventBus } from "../utils/myEventBus";
-import { HTTP } from "../services/fakeData";
+	import Vue from "vue";
+	import VueLocalStorage from "vue-localstorage";
+	import { EventBus } from "../utils/myEventBus";
+	import { HTTP } from "../services/fakeData";
+	Vue.use(VueLocalStorage);
 
-Vue.use(VueLocalStorage);
-
-export default {
-  data() {
-    return {
-      theme: Vue.localStorage.get("theme"),
-      items: items,
-      posts: [],
-      errors: [],
-      name: "tables",
-      currentPage: 1,
-      perPage: 10,
-      totalRows: 1,
-      pageOptions: [5, 10, 15, 20, 25, 50, 100],
-      sortBy: null,
-      sortDesc: false,
-      filter: null
-    };
-  },
-  created() {
-    HTTP.get(`http://jsonplaceholder.typicode.com/posts`)
-      .then(response => {
-        this.posts = response.data;
-        this.totalRows = this.posts.length;
-      })
-      .catch(e => {
-        this.errors.push(e);
-      });
-    this.$bus.$on("theme-changed", $event => {      
-      this.updateTheme();
-    });
-  },
-  methods: {
-    updateTheme() {
-      this.theme = Vue.localStorage.get("theme");
-      console.log("updating theme to : " + this.theme);
-    }
-  }
-};
+	export default {
+		data() {
+			return {
+				theme: Vue.localStorage.get("theme"),
+				items: items,
+				posts: [],
+				errors: [],
+				name: "tables",
+				currentPage: 1,
+				perPage: 10,
+				totalRows: 1,
+				pageOptions: [5, 10, 15, 20, 25, 50, 100],
+				sortBy: null,
+				sortDesc: false,
+				filter: null
+			};
+		},
+		created() {
+			HTTP.get(`http://jsonplaceholder.typicode.com/posts`)
+				.then(response => {
+					this.posts = response.data;
+					this.totalRows = this.posts.length;
+				})
+				.catch(e => {
+					this.errors.push(e);
+				});
+			this.$bus.$on("theme-changed", $event => {
+				this.updateTheme();
+			});
+		},
+		methods: {
+			updateTheme() {
+				this.theme = Vue.localStorage.get("theme");
+				console.log("updating theme to : " + this.theme);
+			}
+		}
+	};
 </script>
 <style>
-.white {
-  background-color: white;
-}
-.scroll {
-  overflow: scroll;
-}
-.pagination {
-  margin-top: 10px;
-  margin-bottom: 20px !important;
-}
-.label {
-  padding: 5px;
-}
+	.white {
+		background-color: white;
+	}
+
+	.scroll {
+		overflow: scroll;
+	}
+
+	.pagination {
+		margin-top: 10px;
+		margin-bottom: 20px !important;
+	}
+
+	.label {
+		padding: 5px;
+	}
 </style>
