@@ -1,5 +1,5 @@
 <template>
-	<div class="parse">		
+	<div class="parse">
 		<h1>Parse CSV to JSON</h1>
 		<input id="fileInput" type="file" @change="upload" v-bind:variant="theme">
 		<b-button @click='save' v-bind:variant="theme" download>Download</b-button>
@@ -89,7 +89,8 @@
 		width: 40%;
 		text-align: left;
 	}
-	.parse{
-		margin-top:7vh;
+
+	.parse {
+		margin-top: 7vh;
 	}
 </style>
