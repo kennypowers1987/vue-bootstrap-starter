@@ -22,10 +22,10 @@ Vue.component('navbar', nav);
 Vue.component('vue-simple-spinner', Spinner)
 
 if (!Vue.localStorage.get('theme')) {
-  Vue.localStorage.set('theme', 'primary')
+  Vue.localStorage.set('theme', 'dark')
 };
 
-router.replace('/modals')
+router.replace('/tables')
 
 const app = new Vue({
   components: nav,

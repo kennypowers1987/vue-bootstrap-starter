@@ -1,47 +1,49 @@
 @import url(https://fonts.googleapis.com/css?family=Alegreya+Sans);
 @import url(https://fonts.googleapis.com/css?family=Nunito+Sans);
 @import url(https://fonts.googleapis.com/css?family=Muli);
-
-$nunito: 'Nunito Sans', sans-serif;
-$alegreya-sans:  'Alegreya Sans', sans-serif;
-$muli:  'Muli', sans-serif;
-$primary-color:   #2c3e50;  
-
+$nunito: 'Nunito Sans',
+sans-serif;
+$alegreya-sans : 'Alegreya Sans',
+sans-serif;
+$muli : 'Muli',
+sans-serif;
+$primary-color : #2c3e50;
 body {
-  font: 100% $muli;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color:  $primary-color; 
+    font: 100% $muli;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: $primary-color;
 }
+
 h1,
 h2 {
-  font-weight: normal;
+    font-weight: normal;
 }
 
 ul {
-  list-style-type: none;
-  padding: 0;
+    list-style-type: none;
+    padding: 0;
 }
 
 li {
-  display: inline-block;
-  margin: 0 10px;
+    display: inline-block;
+    margin: 0 10px;
 }
 
 a {
-  color: #42b983;
+    color: #42b983;
 }
 
-.jumbotron{
-  text-align: center;
+.jumbotron {
+    text-align: center;
 }
 
 .pagination .active {
-  background-color: grey !important;
-  color:white !important;
-  border-color: gray !important;
+    background-color: grey !important;
+    color: white !important;
+    border-color: gray !important;
 }
 
-.pagination  a{ 
-  color:grey !important;  
+.pagination a {
+    color: grey !important;
 }
