@@ -4,11 +4,14 @@
 		<input id="fileInput" type="file" @change="upload" v-bind:variant="theme">
 		<b-button @click='save' v-bind:variant="theme" download>Download</b-button>
 		<div class="body">
-			<div class="entry">
-				<textarea class="entry-result form-control" v-model='doc' placeholder="Type here">
-          </textarea>
-			</div>
 		</div>
+		<b-table striped hover :items="doc" :fields="docFields">
+			<template slot="delete_btn" slot-scope="row">
+				<!-- we use @click.stop here to prevent emitting of a 'row-clicked' event  -->
+				<b-button size="sm" @click.stop="doc.splice(row.index, 1)" class="btn btn-danger">Remove
+				</b-button>
+			</template>
+		</b-table>
 	</div>
 </template>
 
@@ -27,6 +30,7 @@
 			return {
 				doc: null,
 				theme: Vue.localStorage.get("theme"),
+				docFields: [],
 			}
 		},
 		created() {
@@ -43,8 +47,15 @@
 					Papa.parse(fileLoadedEvent.target.result, {
 						header: true,
 						complete(results) {
-							console.log('complete', results)
-							that.doc = JSON.stringify(results.data, null, 2)
+							that.doc = results.data
+							that.docFields = Object.keys(that.doc[0]);
+							that.docFields.push('delete_btn');
+							that.docFields = that.docFields.map(str => {								
+								return {
+									key: str, 
+									sortable: true
+								}
+							});
 						},
 						error(errors) {
 							console.log('error', errors)
