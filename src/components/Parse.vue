@@ -31,6 +31,7 @@
 				doc: null,
 				theme: Vue.localStorage.get("theme"),
 				docFields: [],
+				moreDocs: []
 			}
 		},
 		created() {
@@ -50,12 +51,14 @@
 							that.doc = results.data
 							that.docFields = Object.keys(that.doc[0]);
 							that.docFields.push('delete_btn');
-							that.docFields = that.docFields.map(str => {								
+							that.docFields = that.docFields.map(str => {
 								return {
-									key: str, 
+									key: str,
 									sortable: true
 								}
 							});
+							that.moreDocs = that.groupBy(that.doc, "Team");
+							console.log(that.moreDocs);
 						},
 						error(errors) {
 							console.log('error', errors)
@@ -74,6 +77,15 @@
 			updateTheme() {
 				this.theme = Vue.localStorage.get("theme");
 				console.log("updating theme to : " + this.theme);
+			},
+			groupBy(arr, property) {
+				return arr.reduce((arr, x) => {
+					if (!arr[x[property]]) {
+						arr[x[property]] = [];
+					}
+					arr[x[property]].push(x);
+					return arr;
+				}, {});
 			}
 		}
 	}
