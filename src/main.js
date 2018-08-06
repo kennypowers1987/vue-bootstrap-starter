@@ -25,7 +25,7 @@ if (!Vue.localStorage.get('theme')) {
   Vue.localStorage.set('theme', 'dark')
 };
 
-router.replace('/tables')
+router.replace('/parse')
 
 const app = new Vue({
   components: nav,
