@@ -5,13 +5,13 @@
 		<b-button @click='save' v-bind:variant="theme" download>Download</b-button>
 		<div class="body">
 		</div>
-		<b-table striped hover :items="doc" :fields="docFields">
+		<!-- <b-table striped hover :items="players" :fields="playersFields" >
 			<template slot="delete_btn" slot-scope="row">
-				<!-- we use @click.stop here to prevent emitting of a 'row-clicked' event  -->
-				<b-button size="sm" @click.stop="doc.splice(row.index, 1)" class="btn btn-danger">Remove
+			
+				<b-button size="sm" @click.stop="players.splice(row.index, 1)" class="btn btn-danger">Remove
 				</b-button>
 			</template>
-		</b-table>
+		</b-table> -->
 	</div>
 </template>
 
@@ -28,10 +28,15 @@
 		name: 'parse',
 		data() {
 			return {
-				doc: null,
+				players: null,
 				theme: Vue.localStorage.get("theme"),
-				docFields: [],
-				moreDocs: []
+				playersFields: [],
+				positions: [],
+				QBs: [],
+				RBs: [],
+				WRs: [],
+				TEs: [],
+				DSTs: [],
 			}
 		},
 		created() {
@@ -47,18 +52,8 @@
 				reader.onload = fileLoadedEvent => {
 					Papa.parse(fileLoadedEvent.target.result, {
 						header: true,
-						complete(results) {
-							that.doc = results.data
-							that.docFields = Object.keys(that.doc[0]);
-							that.docFields.push('delete_btn');
-							that.docFields = that.docFields.map(str => {
-								return {
-									key: str,
-									sortable: true
-								}
-							});
-							that.moreDocs = that.groupBy(that.doc, "Team");
-							console.log(that.moreDocs);
+						complete(results) {							
+							that.parseData(results.data);
 						},
 						error(errors) {
 							console.log('error', errors)
@@ -67,12 +62,49 @@
 				}
 				reader.readAsText(fileToLoad)
 			},
+			parseData(data) {
+				const that = this;
+				JSON.parse(JSON.stringify(data));
+				that.players = data;
+				that.players.pop();
+				that.playersFields = Object.keys(that.players[0]);
+				that.playersFields.push('delete_btn');
+				that.playersFields = that.playersFields.map(str => {
+					return {
+						key: str,
+						sortable: true
+					}
+				});
+				that.positions = that.groupBy(that.players, "Position");
+				that.QBs = JSON.parse(JSON.stringify(that.positions['QB'].map(x => {
+					return x
+				})));
+				that.RBs = JSON.parse(JSON.stringify(that.positions['RB'].map(x => {
+					return x
+				})));
+				that.WRs = that.positions['WR'].map(x => {
+					return x
+				});
+				that.TEs = JSON.parse(JSON.stringify(that.positions['TE'].map(x => {
+					return x
+				})));
+				that.DSTs = JSON.parse(JSON.stringify(that.positions['DST'].map(x => {
+					return x
+				})));
+				console.log(that.QBs);
+				console.log(that.RBs);
+				console.log(that.WRs);
+				console.log(that.TEs);
+				console.log(that.DSTs);
+				for (var i = 1; i < 100; i++) that.generateLineup();
+				
+			},
 			save() {
 				const blob = new Blob([this.parseJSONtoCSV()], { type: 'text/csv' })
 				FileSaver.saveAs(blob, 'test.csv')
 			},
 			parseJSONtoCSV() {
-				return Papa.unparse(this.doc)
+				return Papa.unparse(this.players)
 			},
 			updateTheme() {
 				this.theme = Vue.localStorage.get("theme");
@@ -86,6 +118,28 @@
 					arr[x[property]].push(x);
 					return arr;
 				}, {});
+			},
+			generateLineup() {
+				const that = this;
+				let lineup = {};
+				const checkDupe = (index1, index2) => {
+					if (lineup[index1] === lineup[index2]) {
+						console.log(index2)
+					};
+				};
+				lineup.QB = that.QBs[Math.floor(Math.random() * (that.QBs.length + 1))];
+				lineup.RB = that.RBs[Math.floor(Math.random() * (that.RBs.length + 1))];
+				lineup.RB2 = that.RBs[Math.floor(Math.random() * (that.RBs.length + 1))];
+				lineup.WR = that.WRs[Math.floor(Math.random() * (that.WRs.length + 1))];
+				lineup.WR2 = that.WRs[Math.floor(Math.random() * (that.WRs.length + 1))];
+				lineup.WR3 = that.WRs[Math.floor(Math.random() * (that.WRs.length + 1))];
+				lineup.TE = that.TEs[Math.floor(Math.random() * (that.TEs.length + 1))];
+				lineup.FLEX = that.RBs[Math.floor(Math.random() * (that.RBs.length + 1))];
+				lineup.DST = that.DSTs[Math.floor(Math.random() * (that.DSTs.length + 1))];
+				checkDupe('RB', 'RB2');
+				console.log(lineup);
+
+
 			}
 		}
 	}
