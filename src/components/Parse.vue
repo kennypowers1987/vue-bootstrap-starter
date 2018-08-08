@@ -1,25 +1,44 @@
 <template>
 	<div class="parse">
-		<h1>Parse CSV to JSON</h1>
-		<input id="fileInput" type="file" @change="upload" v-bind:variant="theme">
-		<b-button @click='save' v-bind:variant="theme" download>Download</b-button>
-		<div class="body">
-		</div>
-		<!-- <b-table striped hover :items="players" :fields="playersFields" >
-			<template slot="delete_btn" slot-scope="row">
-			
-				<b-button size="sm" @click.stop="players.splice(row.index, 1)" class="btn btn-danger">Remove
-				</b-button>
-			</template>
-		</b-table> -->
+		<b-tabs>
+			<b-tab title="Players" active>
+				<h1>Parse CSV to JSON</h1>
+				<input id="fileInput" type="file" @change="upload" v-bind:variant="theme">
+				<b-button @click='save' v-bind:variant="theme" download>Download</b-button>
+				<div class="body">
+				</div>
+				<b-table striped hover :items="players" :fields="playersFields">
+					<template slot="delete_btn" slot-scope="row">
+
+						<b-button size="sm" @click.stop="players.splice(row.index, 1)" class="btn btn-danger">Remove
+						</b-button>
+					</template>
+				</b-table>
+			</b-tab>
+			<b-tab title="Lineups">
+				<b-card v-for="(lineup, index) in lineups" v-bind:key="index" v-bind:text-variant="theme" bg-variant="secondary" v-if="lineups.length"
+				  tag="article" class="col-sm-2 card">
+					{{lineup}}
+				</b-card>
+			</b-tab>
+			<!-- <b-tab title="disabled" disabled>
+						<br>Disabled tab!
+					</b-tab> -->
+		</b-tabs>
+
 	</div>
+
 </template>
 
-<script>	
+<script>
 	import Vue from "vue";
 	import VueLocalStorage from "vue-localstorage";
-	import { EventBus } from "../utils/myEventBus";
-	import { HTTP } from "../services/fakeData";
+	import {
+		EventBus
+	} from "../utils/myEventBus";
+	import {
+		HTTP
+	} from "../services/fakeData";
 	import Papa from 'papaparse';
 	import Blob from 'blob';
 	import FileSaver from 'file-saver';
@@ -37,6 +56,7 @@
 				WRs: [],
 				TEs: [],
 				DSTs: [],
+				lineups: []
 			}
 		},
 		created() {
@@ -52,7 +72,7 @@
 				reader.onload = fileLoadedEvent => {
 					Papa.parse(fileLoadedEvent.target.result, {
 						header: true,
-						complete(results) {							
+						complete(results) {
 							that.parseData(results.data);
 						},
 						error(errors) {
@@ -97,10 +117,12 @@
 				console.log(that.TEs);
 				console.log(that.DSTs);
 				for (var i = 1; i < 100; i++) that.generateLineup();
-				
+
 			},
 			save() {
-				const blob = new Blob([this.parseJSONtoCSV()], { type: 'text/csv' })
+				const blob = new Blob([this.parseJSONtoCSV()], {
+					type: 'text/csv'
+				})
 				FileSaver.saveAs(blob, 'test.csv')
 			},
 			parseJSONtoCSV() {
@@ -137,7 +159,8 @@
 				lineup.FLEX = that.RBs[Math.floor(Math.random() * (that.RBs.length + 1))];
 				lineup.DST = that.DSTs[Math.floor(Math.random() * (that.DSTs.length + 1))];
 				checkDupe('RB', 'RB2');
-				console.log(lineup);
+				this.lineups.push(lineup);
+
 
 
 			}
