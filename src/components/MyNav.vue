@@ -10,6 +10,7 @@
         <b-nav-item to="/tables">Tables</b-nav-item>
         <b-nav-item to="/modals">Modals</b-nav-item>
         <b-nav-item to="/forms">Forms</b-nav-item>
+        <b-nav-item to="/pdfs">PDFs</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
         <b-nav-item-dropdown text="Theme" right>
