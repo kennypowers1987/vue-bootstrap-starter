@@ -2,6 +2,7 @@ import cards from '../components/MyCards.vue'
 import tables from '../components/MyTables.vue'
 import modals from '../components/MyModals.vue'
 import forms from '../components/MyForms.vue'
+import pdfs from '../components/MyPDFs.vue'
 
 const Tables = {
   routes,
@@ -26,6 +27,12 @@ const Forms = {
   render: h => h(forms)
 }
 
+const PDFs = {
+  //template: '#pdfs,
+  routes,
+  render: h => h(pdfs)
+}
+
 const routes = [{
     path: '/tables',
     component: Tables
@@ -41,6 +48,10 @@ const routes = [{
   {
     path: '/forms',
     component: Forms
+  },
+  {
+    path: '/pdfs',
+    component: PDFs
   },
   {
     path: '*',
