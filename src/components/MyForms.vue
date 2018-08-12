@@ -23,14 +23,17 @@
         <b-button type="submit" v-bind:variant="theme" class="float-right">Submit</b-button>
       </b-form>
     </div>
+    <new-agent-form style="margin-top: 20px"></new-agent-form>
   </div>
 </template>
 <script>
 import Vue from "vue";
 import VueLocalStorage from "vue-localstorage";
 import { EventBus } from "../utils/myEventBus";
+import NewAgentForm from "./NewAgentForm"
 
 export default {
+  components: {NewAgentForm},
   data: function() {
     return {
       theme: Vue.localStorage.get("theme"),
@@ -54,7 +57,7 @@ export default {
     };
   },
   created() {
-    this.$bus.$on("theme-changed", $event => {      
+    this.$bus.$on("theme-changed", $event => {
       this.updateTheme();
     });
   },
