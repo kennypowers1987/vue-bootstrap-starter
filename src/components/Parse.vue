@@ -95,6 +95,12 @@
       });
     },
     methods: {
+      drawTeams() {
+        this.teams = this.groupBy(this.doc, "TeamAbbrev");        
+      },
+      drawPositions(){
+        this.positions = this.groupBy(this.doc, "Position");
+      },
       upload(e) {
         var that = this;
         const fileToLoad = event.target.files[0]
@@ -111,11 +117,10 @@
                 }
               });
               that.docFields.push('delete_btn');
-              that.teams = that.groupBy(that.doc, "TeamAbbrev");
-              that.positions = that.groupBy(that.doc, "Position");
               console.log(that.teams);
               console.log(that.positions);
-
+              that.drawTeams();
+              that.drawPositions();
             },
             error(errors) {
               console.log('error', errors)
@@ -149,7 +154,7 @@
       },
       setPosition(pos) {
         this.position = this.positions[pos];
-      },
+      },      
       generate() {
         var that = this;
         var playerIds = [];
@@ -268,7 +273,7 @@
               'Total Salary': totalSalary
             }
             that.lineups.unshift(lineup);
-            
+
           }
         }
         getQB();
