@@ -7,11 +7,11 @@
     </b-button>
     <div class="body">
     </div>
-    <b-tabs v-if="doc">
+    <b-tabs v-if="playersList">
       <b-tab title="All Players" active>
-        <b-table striped hover :items="doc" :fields="docFields">
+        <b-table striped hover :items="playersList" :fields="playersListFields">
           <template slot="delete_btn" slot-scope="row">
-            <b-button size="sm" @click.stop="doc.splice(row.index, 1)" class="btn btn-danger">
+            <b-button size="sm" @click.stop="removePlayer(playersList[row.index])" class="btn btn-danger">
               Remove
             </b-button>
           </template>
@@ -23,13 +23,7 @@
             {{team}}
           </b-btn>
         </div>
-        <b-table striped hover :items="team" :fields="docFields" v-if="team.length">
-          <template slot="delete_btn" slot-scope="row">
-            <b-button size="sm" @click.stop="doc.splice(row.index, 1)" class="btn btn-danger">
-              Remove
-            </b-button>
-          </template>
-        </b-table>
+        <b-table striped hover :items="team" :fields="playersListFields" v-if="team.length"></b-table>
       </b-tab>
       <b-tab title="Players By Position">
         <div class="alert alert-light">
@@ -37,13 +31,7 @@
             {{position}}
           </b-btn>
         </div>
-        <b-table striped hover :items="position" :fields="docFields" v-if="position.length">
-          <template slot="delete_btn" slot-scope="row">
-            <b-button size="sm" @click.stop="doc.splice(row.index, 1)" class="btn btn-danger">
-              Remove
-            </b-button>
-          </template>
-        </b-table>
+        <b-table striped hover :items="position" :fields="playersListFields" v-if="position.length"></b-table>
       </b-tab>
       <b-tab title="Lineups">
         <b-btn size="sm" @click="generate()">Generate</b-btn>
@@ -66,9 +54,9 @@
     name: 'parse',
     data() {
       return {
-        doc: null,
+        playersList: null,
         theme: Vue.localStorage.get("theme"),
-        docFields: [],
+        playersListFields: [],
         team: {},
         teams: {},
         position: {},
@@ -96,10 +84,19 @@
     },
     methods: {
       drawTeams() {
-        this.teams = this.groupBy(this.doc, "TeamAbbrev");        
+        this.teams = this.groupBy(this.playersList, "TeamAbbrev");
       },
-      drawPositions(){
-        this.positions = this.groupBy(this.doc, "Position");
+      drawPositions() {
+        this.positions = this.groupBy(this.playersList, "Position");
+      },
+      removePlayer(player) {
+        var id = player.ID
+        console.log(this.playersList);
+        this.playersList = this.playersList.filter(function (player) {
+          return player.ID !== id;
+        });
+        this.drawTeams();
+        this.drawPositions();
       },
       upload(e) {
         var that = this;
@@ -109,14 +106,14 @@
           Papa.parse(fileLoadedEvent.target.result, {
             header: true,
             complete(results) {
-              that.doc = results.data
-              that.docFields = Object.keys(that.doc[0]).map(str => {
+              that.playersList = results.data
+              that.playersListFields = Object.keys(that.playersList[0]).map(str => {
                 return {
                   key: str,
                   sortable: true
                 }
               });
-              that.docFields.push('delete_btn');
+              that.playersListFields.push('delete_btn');
               console.log(that.teams);
               console.log(that.positions);
               that.drawTeams();
@@ -134,7 +131,7 @@
         FileSaver.saveAs(blob, 'test.csv')
       },
       parseJSONtoCSV() {
-        return Papa.unparse(this.doc)
+        return Papa.unparse(this.playersList)
       },
       updateTheme() {
         this.theme = Vue.localStorage.get("theme");
@@ -154,7 +151,7 @@
       },
       setPosition(pos) {
         this.position = this.positions[pos];
-      },      
+      },
       generate() {
         var that = this;
         var playerIds = [];
