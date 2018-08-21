@@ -34,18 +34,30 @@
         <b-table striped hover :items="position" :fields="playersListFields" v-if="position.length"></b-table>
       </b-tab>
       <b-tab title="Lineups">
-        <b-btn size="sm" @click="generate()">Generate</b-btn>
+        <div>
+          <label>Select Flex Position:</label>
+          <select v-model="selectedFlex">
+            <option>RB</option>
+            <option>WR</option>
+            <option>TE</option>
+          </select>
+        </div>
+        <b-btn @click="generate()">Generate</b-btn>
         <b-table striped hover :items="lineups" v-if="lineups.length"></b-table>
       </b-tab>
     </b-tabs>
   </div>
 </template>
 
-<script>	
+<script>
   import Vue from "vue";
   import VueLocalStorage from "vue-localstorage";
-  import { EventBus } from "../utils/myEventBus";
-  import { HTTP } from "../services/fakeData";
+  import {
+    EventBus
+  } from "../utils/myEventBus";
+  import {
+    HTTP
+  } from "../services/fakeData";
   import Papa from 'papaparse';
   import Blob from 'blob';
   import FileSaver from 'file-saver';
@@ -54,6 +66,7 @@
     name: 'parse',
     data() {
       return {
+        selectedFlex: 'RB',
         playersList: null,
         theme: Vue.localStorage.get("theme"),
         playersListFields: [],
@@ -127,11 +140,13 @@
         reader.readAsText(fileToLoad)
       },
       save() {
-        const blob = new Blob([this.parseJSONtoCSV()], { type: 'text/csv' })
+        const blob = new Blob([this.parseJSONtoCSV()], {
+          type: 'text/csv'
+        })
         FileSaver.saveAs(blob, 'test.csv')
       },
       parseJSONtoCSV() {
-        return Papa.unparse(this.playersList)
+        return Papa.unparse(this.fullLineups)
       },
       updateTheme() {
         this.theme = Vue.localStorage.get("theme");
@@ -155,6 +170,7 @@
       generate() {
         var that = this;
         var playerIds = [];
+
         function getQB() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['QB'].length - 1));
           console.log(index);
@@ -163,6 +179,7 @@
           playerIds.push(that.lineup.QB.ID);
           getRB1();
         }
+
         function getRB1() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['RB'].length - 1));
           console.log(index);
@@ -170,6 +187,7 @@
           playerIds.push(that.lineup.RB1.ID);
           getRB2();
         }
+
         function getRB2() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['RB'].length - 1));
           console.log(index);
@@ -177,6 +195,7 @@
           playerIds.push(that.lineup.RB2.ID);
           getWR1();
         }
+
         function getWR1() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
           console.log(index);
@@ -184,6 +203,7 @@
           playerIds.push(that.lineup.WR1.ID);
           getWR2();
         }
+
         function getWR2() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
           console.log(index);
@@ -191,6 +211,7 @@
           playerIds.push(that.lineup.WR2.ID);
           getWR3();
         }
+
         function getWR3() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
           console.log(index);
@@ -198,6 +219,7 @@
           playerIds.push(that.lineup.WR3.ID);
           getTE();
         }
+
         function getTE() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['TE'].length - 1));
           console.log(index);
@@ -205,13 +227,15 @@
           playerIds.push(that.lineup.TE.ID);
           getFLEX();
         }
+
         function getFLEX() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['RB'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions[that.selectedFlex].length - 1));
           console.log(index);
-          that.lineup.FLEX = that.positions['RB'][index];
+          that.lineup.FLEX = that.positions[that.selectedFlex][index];
           playerIds.push(that.lineup.FLEX.ID);
           getDST();
         }
+
         function getDST() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['DST'].length - 1));
           console.log(index);
@@ -220,6 +244,7 @@
           console.log(that.lineup);
           validateLineup();
         }
+
         function validateLineup() {
           function removeDuplicate(arr) {
             var c;
@@ -249,12 +274,10 @@
           if (checkDupes.length < 9) {
             console.log('dupes exist, restarting ', checkDupes.length);
             getQB();
-          }
-          else if (totalSalary > 50000) {
+          } else if (totalSalary > 50000) {
             console.log('salary cap expectations not met ', totalSalary);
             getQB();
-          }
-          else {
+          } else {
             that.lineup['Total Salary'] = totalSalary;
             that.fullLineups.unshift(that.lineup);
             var lineup = {
@@ -268,15 +291,16 @@
               'FLEX': that.lineup.FLEX.Name + " " + that.lineup.FLEX['TeamAbbrev'] + " " + that.lineup.FLEX['Salary'],
               'DST': that.lineup.DST.Name + " " + that.lineup.DST['TeamAbbrev'] + " " + that.lineup.DST['Salary'],
               'Total Salary': totalSalary
-            }
+            }            
             that.lineups.unshift(lineup);
-
+            
           }
         }
         getQB();
       }
     }
   }
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -304,4 +328,6 @@
   .parse {
     margin-top: 7vh;
   }
+
 </style>
+
