@@ -11,6 +11,11 @@ import VueLocalStorage from 'vue-localstorage'
 import Vuex from 'vuex'
 import Spinner from 'vue-simple-spinner'
 import infiniteScroll from 'vue-infinite-scroll'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(faQuestionCircle)
 
 Vue.use(BootstrapVue)
 Vue.use(VueTruncate)

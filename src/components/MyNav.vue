@@ -5,12 +5,8 @@
       <img src="src/assets/logo.png" style="width:25px;">
     </b-navbar-brand>
     <b-collapse is-nav id="nav_collapse">
-      <b-navbar-nav>
-        <b-nav-item to="/cards">Cards</b-nav-item>
-        <b-nav-item to="/tables">Tables</b-nav-item>
-        <b-nav-item to="/modals">Modals</b-nav-item>
-        <b-nav-item to="/forms">Forms</b-nav-item>
-        <b-nav-item to="/parse">Parse CSV/JSON</b-nav-item>
+      <b-navbar-nav>        
+        <b-nav-item to="/parse">DK NFL Lineup Generator</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
         <b-nav-item-dropdown text="Theme" right>
@@ -20,14 +16,16 @@
           <b-dropdown-item href="#" @click="updateTheme('warning')" class="bg-warning">Warning</b-dropdown-item>
           <b-dropdown-item href="#" @click="updateTheme('dark')" class="bg-dark" style="color:white">Dark</b-dropdown-item>
           <b-dropdown-item href="#" @click="updateTheme('secondary')" class="bg-secondary">Secondary</b-dropdown-item>
+          <b-dropdown-item href="#" @click="updateTheme('white')" class="bg-white">White</b-dropdown-item>
+          <b-dropdown-item href="#" @click="updateTheme('light')" class="bg-light">Light</b-dropdown-item>
         </b-nav-item-dropdown>
-        <b-nav-item-dropdown right>
+        <!-- <b-nav-item-dropdown right>
           <template slot="button-content">
             <em>User</em>
           </template>
           <b-dropdown-item href="#">Profile</b-dropdown-item>
           <b-dropdown-item href="#">Signout</b-dropdown-item>
-        </b-nav-item-dropdown>
+        </b-nav-item-dropdown> -->
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
