@@ -1,16 +1,27 @@
-import parse from "../components/Parse.vue";
+import draftkings from "../components/DraftKingsGenerator.vue";
+import fanduel  from "../components/FanDuelGenerator.vue";
 
-
-const Parse = {
+const DraftKings = {
 	//template: '#modals',
 	routes,
-	render: h => h(parse)
+	render: h => h(draftkings)
+};
+
+
+const FanDuel = {
+	//template: '#modals',
+	routes,
+	render: h => h(fanduel)
 };
 
 const routes = [	
     {
-		path: "/parse",
-		component: Parse
+		path: "/DraftKings",
+		component: DraftKings
+	},
+	{
+		path: "/FanDuel",
+		component: FanDuel
 	},
 	{
 		path: "*",

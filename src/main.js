@@ -30,7 +30,7 @@ if (!Vue.localStorage.get('theme')) {
   Vue.localStorage.set('theme', 'dark')
 };
 
-router.replace('/parse')
+router.replace('/draftkings')
 
 const app = new Vue({
   components: nav,

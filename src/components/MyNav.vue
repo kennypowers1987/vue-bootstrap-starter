@@ -6,7 +6,10 @@
     </b-navbar-brand>
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav>        
-        <b-nav-item to="/parse">DK NFL Lineup Generator</b-nav-item>
+        <b-nav-item to="/DraftKings">DK NFL Lineup Generator</b-nav-item>
+      </b-navbar-nav>
+      <b-navbar-nav>        
+        <b-nav-item to="/FanDuel">FanDuel NFL Lineup Generator</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
         <b-nav-item-dropdown text="Theme" right>
