@@ -6,14 +6,28 @@
         ?
       </b-btn>
       <h3 class="float-right" style="padding:10px;">
-        <a href="https://neocities.org/site/lineupgenerator">Donate $$</a>
+        <a href="https://neocities.org/site/lineupgenerator">Donate |</a>
+        <a href="https://twitter.com/keepthereporter?lang=en">Follow </a>
       </h3>
     </h1>
+    <div class="alert alert-info"><a href="https://lineupgenerator.net/Week1/Week1MainSlateFiltered.csv">Download Week
+        1 Players (Main Slate) Here</a>
+      </br>
+      Then import the .csv below (If you are playing a different slate, download the .csv from DK/FanDuel)
+      </br>Remove players that you don't want in your player pool
+      </br>Go to the Lineups tab and start generating lineups
+      </br>Export your lineups by clicking 'Download', modify the headers manually, and import them into DraftKings or
+      FanDuel
+    </div>
     <div class="alert alert-danger">
       When you download your lineups, in the downloaded .csv, change the headers to 'QB, RB, RB, WR, WR, WR, TE, FLEX,
       DST' or you won't be able to upload it to DK.
     </div>
-
+    <label><strong>
+        Import Your Player Pool
+      </strong> </br>
+      in the same format as the .csv download from DraftKings</label>
+    </br>
     <input id="fileInput" type="file" @change="upload" v-bind:variant="theme">
 
     <div class="body">
@@ -58,7 +72,7 @@
         </div>
         <b-btn @click="generate()">Generate</b-btn>
         <b-button @click='save' v-bind:variant="theme" download>
-          Download
+          Download {{lineups.length}} Lineups
         </b-button>
         <b-table striped hover :items="lineups" v-if="lineups.length"></b-table>
 
@@ -122,7 +136,7 @@
       },
       removePlayer(player) {
         var id = player.ID
-        console.log(this.playersList);
+
         this.playersList = this.playersList.filter(function (player) {
           return player.ID !== id;
         });
@@ -145,8 +159,6 @@
                 }
               });
               that.playersListFields.push('delete_btn');
-              console.log(that.teams);
-              console.log(that.positions);
               that.drawTeams();
               that.drawPositions();
             },
@@ -171,14 +183,13 @@
           type: 'text/csv'
         })
         FileSaver.saveAs(blob, 'DK' + new Date() + '.csv')
-        
+
       },
-      parseJSONtoCSV(table) {        
+      parseJSONtoCSV(table) {
         return Papa.unparse(table)
       },
       updateTheme() {
         this.theme = Vue.localStorage.get("theme");
-        console.log("updating theme to : " + this.theme);
       },
       groupBy(arr, property) {
         return arr.reduce((arr, x) => {
@@ -201,7 +212,6 @@
 
         function getQB() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['QB'].length - 1));
-          console.log(index);
           //that.lineup.QB = (({ Name, Salary, Position }) => ({ Name, Salary, Position }))(that.positions['QB'][index])
           that.lineup.QB = that.positions['QB'][index];
           playerIds.push(that.lineup.QB.ID);
@@ -210,7 +220,6 @@
 
         function getRB1() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['RB'].length - 1));
-          console.log(index);
           that.lineup.RB1 = that.positions['RB'][index];
           playerIds.push(that.lineup.RB1.ID);
           getRB2();
@@ -218,7 +227,6 @@
 
         function getRB2() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['RB'].length - 1));
-          console.log(index);
           that.lineup.RB2 = that.positions['RB'][index];
           playerIds.push(that.lineup.RB2.ID);
           getWR1();
@@ -226,15 +234,16 @@
 
         function getWR1() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
-          console.log(index);
           that.lineup.WR1 = that.positions['WR'][index];
+          if (that.lineup.WR1.TeamAbbrev != that.lineup.QB.TeamAbbrev) {
+             return that.generate();
+          }
           playerIds.push(that.lineup.WR1.ID);
           getWR2();
         }
 
         function getWR2() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
-          console.log(index);
           that.lineup.WR2 = that.positions['WR'][index];
           playerIds.push(that.lineup.WR2.ID);
           getWR3();
@@ -242,7 +251,6 @@
 
         function getWR3() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
-          console.log(index);
           that.lineup.WR3 = that.positions['WR'][index];
           playerIds.push(that.lineup.WR3.ID);
           getTE();
@@ -250,7 +258,6 @@
 
         function getTE() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['TE'].length - 1));
-          console.log(index);
           that.lineup.TE = that.positions['TE'][index];
           playerIds.push(that.lineup.TE.ID);
           getFLEX();
@@ -258,7 +265,6 @@
 
         function getFLEX() {
           let index = Math.floor(Math.random() * Math.floor(that.positions[that.selectedFlex].length - 1));
-          console.log(index);
           that.lineup.FLEX = that.positions[that.selectedFlex][index];
           playerIds.push(that.lineup.FLEX.ID);
           getDST();
@@ -266,7 +272,6 @@
 
         function getDST() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['DST'].length - 1));
-          console.log(index);
           that.lineup.DST = that.positions['DST'][index];
           playerIds.push(that.lineup.DST.ID);
           console.log(that.lineup);
@@ -301,10 +306,20 @@
           console.log('$' + totalSalary)
           if (checkDupes.length < 9) {
             console.log('dupes exist, restarting ', checkDupes.length);
-            getQB();
+            return setTimeout(() => {
+                that.generate();
+            }, 0);
+           
+          } else if (totalSalary < 45000) {
+            console.log('salary cap expectations not met ', totalSalary);
+            return setTimeout(() => {
+                that.generate();
+            }, 0);
           } else if (totalSalary > 50000) {
             console.log('salary cap expectations not met ', totalSalary);
-            getQB();
+            return setTimeout(() => {
+                that.generate();
+            }, 0);
           } else {
             that.lineup['Total Salary'] = totalSalary;
             let lineup = {
