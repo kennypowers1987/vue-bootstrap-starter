@@ -10,13 +10,15 @@
         <a href="https://twitter.com/keepthereporter?lang=en">Follow </a>
       </h3>
     </h1>
-    <div class="alert alert-info"><a href="https://lineupgenerator.net/Week1/Week1MainSlateFiltered.csv">Download Week
-        1 Players (Main Slate) Here</a>
-      </br>
+    <div class="alert alert-info">
+      <a href="https://lineupgenerator.net/Week1/Week1MainSlateFiltered.csv">
+        Download Week  1 Players (Main Slate) Here
+      </a>
+      <br>
       Then import the .csv below (If you are playing a different slate, download the .csv from DK/FanDuel)
-      </br>Remove players that you don't want in your player pool
-      </br>Go to the Lineups tab and start generating lineups
-      </br>Export your lineups by clicking 'Download', modify the headers manually, and import them into DraftKings or
+      <br>Remove players that you don't want in your player pool
+      <br>Go to the Lineups tab and start generating lineups
+      <br>Export your lineups by clicking 'Download', modify the headers manually, and import them into DraftKings or
       FanDuel
     </div>
     <div class="alert alert-danger">
@@ -25,9 +27,10 @@
     </div>
     <label><strong>
         Import Your Player Pool
-      </strong> </br>
+      </strong> 
+    <br>
       in the same format as the .csv download from DraftKings</label>
-    </br>
+    <br>
     <input id="fileInput" type="file" @change="upload" v-bind:variant="theme">
 
     <div class="body">
@@ -310,7 +313,7 @@
                 that.generate();
             }, 0);
            
-          } else if (totalSalary < 45000) {
+          } else if (totalSalary < 48000) {
             console.log('salary cap expectations not met ', totalSalary);
             return setTimeout(() => {
                 that.generate();

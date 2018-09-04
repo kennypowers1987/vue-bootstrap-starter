@@ -10,6 +10,7 @@ sans-serif;
 $primary-color : #2c3e50;
 body {
     font: 100% $muli;
+    font-size:24px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: $primary-color;
@@ -47,3 +48,4 @@ a {
 .pagination a {
     color: grey !important;
 }
+

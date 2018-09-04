@@ -13,9 +13,9 @@
     <div class="alert alert-info">
       <a href='https://lineupgenerator.net/Week1/FDWeek1MainSlateFiltered.csv'>Download Week 1 Players (Main
         Slate) Here </a>
-      </br> Import the players list .csv for your contest below (download the
-      .csv from DK/FanDuel) </br>Remove players that you don't want in your player pool </br>Go to the Lineups tab
-      and start generating lineups </br>Export your lineups by clicking 'Download' , modify the headers manually, and
+      <br> Import the players list .csv for your contest below (download the
+      .csv from DK/FanDuel) <br>Remove players that you don't want in your player pool <br>Go to the Lineups tab
+      and start generating lineups <br>Export your lineups by clicking 'Download' , modify the headers manually, and
       import them into DraftKings or FanDuel </div>
     <div class="alert alert-danger">
       When you download your lineups, in the downloaded .csv, change the headers to 'QB, RB, RB, WR, WR, WR, TE,
@@ -25,9 +25,9 @@
 
     <label><strong>
         Import Your Player Pool
-      </strong> </br>
+      </strong> <br>
       in the same format as the .csv download from FanDuel</label>
-    </br>
+    <br>
     <input id="fileInput" type="file" @change="upload" v-bind:variant="theme">
 
     <div class="body">
