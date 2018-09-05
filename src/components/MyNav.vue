@@ -9,6 +9,9 @@
         <b-nav-item to="/DraftKings">DK NFL Lineup Generator</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav>        
+        <b-nav-item to="/CaptainMode">DK Captain Mode NFL Lineup Generator</b-nav-item>
+      </b-navbar-nav>
+      <b-navbar-nav>        
         <b-nav-item to="/FanDuel">FanDuel NFL Lineup Generator</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
