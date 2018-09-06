@@ -11,8 +11,8 @@
             </h3>
         </h1>
         <div class="alert alert-info">
-            <a href="https://lineupgenerator.net/Week1/Week1MainSlateFiltered.csv">
-                Download Week 1 Players (Main Slate) Here
+            <a href="https://lineupgenerator.net/Week1/CaptainModeEaglesFalconsFiltered.csv">
+                Download Week 1 Players (Eagles Falcons) Here:
             </a>
             <br> Then import the .csv below (If you are playing a different slate, download the .csv from DK/FanDuel)
             <br>Remove players that you don't want in your player pool
@@ -166,7 +166,7 @@
                 })
                 FileSaver.saveAs(blob, 'DK' + new Date() + '.csv')
                 alert(
-                    "In the downloaded .csv, change the headers to 'QB, RB, RB, WR, WR, WR, TE, FLEX, DST' or you won't be able to upload it to DraftKings."
+                    "In the downloaded .csv, change the headers to 'CPT, FLEX, FLEX, FLEX, FLEX, FLEX, FLEX' or you won't be able to upload it to DraftKings."
                 )
             },
             savePlayersList() {
@@ -200,53 +200,60 @@
             generate() {
                 var that = this;
                 var playerIds = [];
+                var playerNames = [];
 
                 function getCaptain() {
-                    console.log('getting CPT')
+                    //console.log('getting CPT')
                     let index = Math.floor(Math.random() * Math.floor(that.positions['CPT'].length - 1));
                     //that.lineup.QB = (({ Name, Salary, Position }) => ({ Name, Salary, Position }))(that.positions['QB'][index])
                     that.lineup.CPT = that.positions['CPT'][index];
                     playerIds.push(that.lineup.CPT.ID);
+                    playerNames.push(that.lineup.CPT.Name);
                     getFlex1();
                 }               
 
                 function getFlex1() {
-                    console.log('getting flex1')
+                    //console.log('getting flex1')
                     let index = Math.floor(Math.random() * Math.floor(that.positions['FLEX'].length - 1));
                     that.lineup.FLEX1 = that.positions['FLEX'][index];
                     playerIds.push(that.lineup.FLEX1.ID);
+                    playerNames.push(that.lineup.FLEX1.Name);
                     console.log(that.lineup);
                     getFlex2();
                 }
                 function getFlex2() {
-                    console.log('getting flex2')
+                    //console.log('getting flex2')
                     let index = Math.floor(Math.random() * Math.floor(that.positions['FLEX'].length - 1));
                     that.lineup.FLEX2 = that.positions['FLEX'][index];
                     playerIds.push(that.lineup.FLEX2.ID);
+                    playerNames.push(that.lineup.FLEX2.Name);
                     console.log(that.lineup);
                     getFlex3();
                 }
                 function getFlex3() {
-                    console.log('getting flex3')
+                    //console.log('getting flex3')
                     let index = Math.floor(Math.random() * Math.floor(that.positions['FLEX'].length - 1));
                     that.lineup.FLEX3 = that.positions['FLEX'][index];
                     playerIds.push(that.lineup.FLEX3.ID);
+                    playerNames.push(that.lineup.FLEX3.Name);
                     console.log(that.lineup);
                     getFlex4();
                 }
                 function getFlex4() {
-                    console.log('getting flex4')
+                    //console.log('getting flex4')
                     let index = Math.floor(Math.random() * Math.floor(that.positions['FLEX'].length - 1));
                     that.lineup.FLEX4 = that.positions['FLEX'][index];
                     playerIds.push(that.lineup.FLEX4.ID);
+                    playerNames.push(that.lineup.FLEX4.Name);
                     console.log(that.lineup);
                     getFlex5();
                 }
                 function getFlex5() {
-                    console.log('getting flex5')
+                    //console.log('getting flex5')
                     let index = Math.floor(Math.random() * Math.floor(that.positions['FLEX'].length - 1));
                     that.lineup.FLEX5 = that.positions['FLEX'][index];
                     playerIds.push(that.lineup.FLEX5.ID);
+                    playerNames.push(that.lineup.FLEX5.Name);
                     console.log(that.lineup);
                     validateLineup();
                 }
@@ -265,7 +272,7 @@
                         }
                         return result;
                     }
-                    var checkDupes = removeDuplicate(playerIds);                    
+                    var checkDupes = removeDuplicate(playerNames);                    
                     var totalSalary =
                         parseInt(that.lineup.CPT.Salary) +
                         parseInt(that.lineup.FLEX1.Salary) +
@@ -281,12 +288,12 @@
                             that.generate();
                         }, 0);
 
-                    } else if (totalSalary < 40000) {
+                    } else if (totalSalary < 35000) {
                         console.log('salary cap expectations not met ', totalSalary);
                         return setTimeout(() => {
                             that.generate();
                         }, 0);
-                    } else if (totalSalary > 50000) {
+                    }  else if (totalSalary > 50000) {
                         console.log('salary cap expectations not met ', totalSalary);
                         return setTimeout(() => {
                             that.generate();
