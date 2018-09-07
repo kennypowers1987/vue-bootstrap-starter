@@ -109,6 +109,13 @@
                 positions: {},
                 lineups: [],
                 fullLineups: [],
+                exposure: {
+                  QB:[],
+                  RB:[],
+                  WR:[],
+                  TE:[],
+                  DST:[],                 
+                },
                 lineup: {
                     'QB': null,
                     'RB1': null,
@@ -236,6 +243,7 @@
                 function getWR1() {
                     let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
                     that.lineup.WR1 = that.positions['WR'][index];
+                    //Stack WR (Force WR1 on same team as QB)
                     if (that.lineup.WR1.TeamAbbrev != that.lineup.QB.TeamAbbrev) {
                         return that.generate();
                     }
@@ -246,6 +254,11 @@
                 function getWR2() {
                     let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
                     that.lineup.WR2 = that.positions['WR'][index];
+                    //Bring it back with correlation (fore WR from opposite team as QB/WR stack)
+                    that.lineup.WR2['Game Info'] = that.lineup.WR2['Game Info'].replace(that.lineup.WR2.TeamAbbrev, '')                   
+                    if (!that.lineup.WR2['Game Info'].includes(that.lineup.QB.TeamAbbrev)) {
+                        return that.generate();
+                    }
                     playerIds.push(that.lineup.WR2.ID);
                     getWR3();
                 }
@@ -335,6 +348,7 @@
                             'DST': that.lineup.DST.Name + " " + that.lineup.DST['TeamAbbrev'] + " " + that.lineup.DST['Salary'],
                             'Total Salary': totalSalary
                         }
+                        
                         that.lineups.unshift(lineup);
                         lineup = {
                             'QB': that.lineup.QB.ID,
