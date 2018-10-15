@@ -17,12 +17,10 @@
       <br> Then import the .csv below (If you are playing a different slate, download the .csv from DK/FanDuel)
       <br>Remove players that you don't want in your player pool
       <br>Go to the Lineups tab and start generating lineups
-      <br>Export your lineups by clicking 'Download', modify the headers manually, and import them into DraftKings or
-      FanDuel
+      <br>Export your lineups by clicking 'Download', modify the headers manually, and import them into DraftKings or FanDuel
     </div>
     <div class="alert alert-danger">
-      When you download your lineups, in the downloaded .csv, change the headers to 'QB, RB, RB, WR, WR, WR, TE, FLEX,
-      DST' or
+      When you download your lineups, in the downloaded .csv, change the headers to 'QB, RB, RB, WR, WR, WR, TE, FLEX, DST' or
       you won't be able to upload it to DK.
     </div>
     <label>
@@ -66,7 +64,7 @@
       </b-tab>
       <b-tab title="Lineups">
         <div>
-          <label>Random Flex position this week</label>         
+          <label>Random Flex position this week</label>
         </div>
         <b-btn @click="generate()">Generate</b-btn>
         <b-button @click='save' v-bind:letiant="theme" download>
@@ -93,7 +91,7 @@
   import FileSaver from 'file-saver';
   Vue.use(VueLocalStorage);
   export default {
-    name: 'draftkings',
+    Name: 'draftkings',
     data() {
       return {
         selectedFlex: 'RB',
@@ -249,7 +247,14 @@
 
         function getWR1() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
-          that.lineup.WR1 = that.positions['WR'][index];                  
+          that.lineup.WR1 = that.positions['WR'][index];          
+          if (that.lineup.WR1.TeamAbbrev != that.lineup.QB.TeamAbbrev) {
+            return setTimeout(() => {
+              that.generate();
+            }, 0);
+          }
+
+
           playerIds.push(that.lineup.WR1.ID);
           that.stackCount.push(that.lineup.WR1['Game Info']);
           getWR2();
@@ -257,9 +262,13 @@
 
         function getWR2() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
-          that.lineup.WR2 = that.positions['WR'][index];
-          //Bring it back with correlation (fore WR from opposite team as QB/WR stack)
-          that.lineup.WR2['Game Info'] = that.lineup.WR2['Game Info'].replace(that.lineup.WR2.TeamAbbrev, '')          
+          that.lineup.WR2 = that.positions['WR'][index];          
+        //   if (that.lineup.WR2['Game Info'] != that.lineup.WR1['Game Info']) {
+        //     return setTimeout(() => {
+        //       that.generate();
+        //     }, 0);
+
+          //}
           playerIds.push(that.lineup.WR2.ID);
           that.stackCount.push(that.lineup.WR2['Game Info']);
           getWR3();
@@ -284,20 +293,23 @@
         function getFLEX() {
           let flextInt = Math.floor(Math.random() * 3);
           let flexText = ''
-          if (flextInt === 0){
-              flexText = 'RB'
+          if (flextInt === 0) {
+            flexText = 'RB'
           }
-          if (flextInt === 1){
-              flexText = 'WR'
+          if (flextInt === 1) {
+            flexText = 'WR'
           }
-          if (flextInt === 2){
-              flexText = 'TE'
+          if (flextInt === 2) {
+            flexText = 'TE'
           }
-          let index = Math.floor(Math.random() * Math.floor(that.positions[flexText].length - 1));         
-          that.lineup.FLEX = that.positions[flexText][index];
-          if (that.lineup.FLEX.TeamAbbrev != that.lineup.QB.TeamAbbrev) {
-            return that.generate();
+          let index = Math.floor(Math.random() * Math.floor(that.positions[flexText].length - 1));
+          that.lineup.FLEX = that.positions[flexText][index];          
+          if (that.lineup.QB['Game Info'] != that.lineup.FLEX['Game Info']) {
+            return setTimeout(() => {
+              that.generate();
+            }, 0);
           }
+
           playerIds.push(that.lineup.FLEX.ID);
           that.stackCount.push(that.lineup.FLEX['Game Info']);
           getDST();
@@ -306,10 +318,10 @@
         function getDST() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['DST'].length - 1));
           that.lineup.DST = that.positions['DST'][index];
-          playerIds.push(that.lineup.DST.ID);          
-          console.log(that.lineup);
-          console.log(that.stackCount);
-          console.log(countUnique(that.stackCount));
+          playerIds.push(that.lineup.DST.ID);
+          //console.log(that.lineup);
+          //console.log(that.stackCount);
+          //console.log(countUnique(that.stackCount));
 
           validateLineup();
         }
@@ -339,30 +351,37 @@
             parseInt(that.lineup.TE.Salary) +
             parseInt(that.lineup.FLEX.Salary) +
             parseInt(that.lineup.DST.Salary);
-          console.log('$' + totalSalary)
-         
+          //console.log('$' + totalSalary)
+
           if (checkDupes.length < 9) {
             console.log('dupes exist, restarting ', checkDupes.length);
+            console.log(that.lineup.QB.Name)
             return setTimeout(() => {
               that.generate();
             }, 0);
 
-          } else if (totalSalary < 48000) {
+          } else if (totalSalary < 49700) {
             console.log('salary cap expectations not met ', totalSalary);
+            console.log(that.lineup.QB.Name)
             return setTimeout(() => {
               that.generate();
             }, 0);
           } else if (totalSalary > 50000) {
             console.log('salary cap expectations not met ', totalSalary);
+            console.log(that.lineup.QB.Name)
             return setTimeout(() => {
               that.generate();
             }, 0);
-          } else if (countUnique(that.stackCount) >= 6) {
-            console.log('Stacking expectations not met ', totalSalary);
-            return setTimeout(() => {
-              that.generate();
-            }, 0);
-          } else {
+          } 
+        //   else if (that.lineup.QB.Name === 'Josh Allen' || that.lineup.QB.Name === 'Cam Newton') {
+        //     if (countUnique(that.stackCount) >= 6) {
+        //       console.log('Stacking expectations not met ', totalSalary);
+        //       return setTimeout(() => {
+        //         that.generate();
+        //       }, 0);
+        //     }
+        //   } 
+          else {
             console.log(countUnique(that.stackCount));
             that.lineup['Total Salary'] = totalSalary;
             let lineup = {
@@ -373,7 +392,8 @@
               'WR2': that.lineup.WR2.Name + " " + that.lineup.WR2['TeamAbbrev'] + " " + that.lineup.WR2['Salary'],
               'WR3': that.lineup.WR3.Name + " " + that.lineup.WR3['TeamAbbrev'] + " " + that.lineup.WR3['Salary'],
               'TE': that.lineup.TE.Name + " " + that.lineup.TE['TeamAbbrev'] + " " + that.lineup.TE['Salary'],
-              'FLEX': that.lineup.FLEX.Name + " " + that.lineup.FLEX['TeamAbbrev'] + " " + that.lineup.FLEX['Salary'],
+              'FLEX': that.lineup.FLEX.Name + " " + that.lineup.FLEX['TeamAbbrev'] + " " + that.lineup.FLEX[
+                'Salary'],
               'DST': that.lineup.DST.Name + " " + that.lineup.DST['TeamAbbrev'] + " " + that.lineup.DST['Salary'],
               'Total Salary': totalSalary
             }
@@ -398,6 +418,7 @@
       }
     }
   }
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -426,4 +447,6 @@
     margin-top: 7vh;
     margin: 3%;
   }
+
 </style>
+
