@@ -38,11 +38,25 @@
         <b-button @click='savePlayersList' v-bind:letiant="theme" download>
           Download Player List
         </b-button>
-        <b-table striped hover :items="playersList" :fields="playersListFields">
+        <b-button @click=''>
+          Delete Selected Players
+        </b-button>
+        <b-button @click=''>
+          Increase Selected Exposure
+        </b-button>
+        <label class="pull-right">Select All:
+          <input class="pull-right" type="checkbox">
+        </label>
+
+        <b-table striped hover :items="playersList" :fields="playersListFields" style="font-size: small;">
           <template slot="delete_btn" slot-scope="row">
             <b-button size="sm" @click.stop="removePlayer(playersList[row.index])" class="btn btn-danger">
               Remove
             </b-button>
+            <b-button size="sm" @click.stop="addPlayer(playersList[row.index])" class="btn btn-success">
+              Increase Exposure
+            </b-button>
+            <input type="checkbox" />
           </template>
         </b-table>
       </b-tab>
@@ -71,7 +85,6 @@
           Download {{lineups.length}} Lineups
         </b-button>
         <b-table striped hover :items="lineups" v-if="lineups.length"></b-table>
-
       </b-tab>
     </b-tabs>
   </div>
@@ -139,6 +152,45 @@
       drawPositions() {
         this.positions = this.groupBy(this.playersList, "Position");
       },
+      calculateExposures() {
+        var that = this;
+        let qbCount = 0;
+        let rbCount = 0;
+        let wrCount = 0;
+        let teCount = 0;
+        let dstCount = 0;
+        this.playersList.forEach(function (player, index) {
+          qbCount += player.Position === "QB" ? 1 : 0;
+          rbCount += player.Position === "RB" ? 1 : 0;
+          wrCount += player.Position === "WR" ? 1 : 0;
+          teCount += player.Position === "TE" ? 1 : 0;
+          dstCount += player.Position === "DST" ? 1 : 0;
+        });
+        this.playersList.forEach(function (player, index) {
+          player.Exposure = that.playersList.reduce(function (r, a) {
+            if (player.Position === "QB") {
+              return r + +(a.ID === player.ID) / qbCount;
+            }
+            if (player.Position === "RB") {
+              return r + +(a.ID === player.ID) / rbCount;
+            }
+            if (player.Position === "WR") {
+              return r + +(a.ID === player.ID) / wrCount;
+            }
+            if (player.Position === "TE") {
+              return r + +(a.ID === player.ID) / teCount;
+            }
+            if (player.Position === "DST") {
+              return r + +(a.ID === player.ID) / dstCount;
+            }
+          }, 0);
+
+        });
+        this.playersList.forEach(function (player, index) {
+          player.Exposure = player.Exposure.toFixed(3);
+        }, 0);
+
+      },
       removePlayer(player) {
         let id = player.ID
 
@@ -147,6 +199,13 @@
         });
         this.drawTeams();
         this.drawPositions();
+        this.calculateExposures();
+      },
+      addPlayer(player) {
+        this.playersList.push(player);
+        this.drawTeams();
+        this.drawPositions();
+        this.calculateExposures();
       },
       upload(e) {
         let that = this;
@@ -156,7 +215,8 @@
           Papa.parse(fileLoadedEvent.target.result, {
             header: true,
             complete(results) {
-              that.playersList = results.data
+              that.playersList = results.data;
+              that.calculateExposures();
               that.playersListFields = Object.keys(that.playersList[0]).map(str => {
                 return {
                   key: str,
@@ -247,7 +307,7 @@
 
         function getWR1() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
-          that.lineup.WR1 = that.positions['WR'][index];          
+          that.lineup.WR1 = that.positions['WR'][index];
           if (that.lineup.WR1.TeamAbbrev != that.lineup.QB.TeamAbbrev) {
             return setTimeout(() => {
               that.generate();
@@ -262,13 +322,12 @@
 
         function getWR2() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
-          that.lineup.WR2 = that.positions['WR'][index];          
-        //   if (that.lineup.WR2['Game Info'] != that.lineup.WR1['Game Info']) {
-        //     return setTimeout(() => {
-        //       that.generate();
-        //     }, 0);
-
-          //}
+          that.lineup.WR2 = that.positions['WR'][index];
+          if (that.lineup.WR2['Game Info'] != that.lineup.WR1['Game Info']) {
+            return setTimeout(() => {
+              that.generate();
+            }, 0);
+          }
           playerIds.push(that.lineup.WR2.ID);
           that.stackCount.push(that.lineup.WR2['Game Info']);
           getWR3();
@@ -277,6 +336,11 @@
         function getWR3() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
           that.lineup.WR3 = that.positions['WR'][index];
+          if (that.lineup.WR3['Game Info'] != that.lineup.WR2['Game Info']) {
+            return setTimeout(() => {
+              that.generate();
+            }, 0);
+          }
           playerIds.push(that.lineup.WR3.ID);
           that.stackCount.push(that.lineup.WR3['Game Info']);
           getTE();
@@ -291,7 +355,7 @@
         }
 
         function getFLEX() {
-          let flextInt = Math.floor(Math.random() * 3);
+          let flextInt = 0 //Math.floor(Math.random() * 3);
           let flexText = ''
           if (flextInt === 0) {
             flexText = 'RB'
@@ -303,13 +367,12 @@
             flexText = 'TE'
           }
           let index = Math.floor(Math.random() * Math.floor(that.positions[flexText].length - 1));
-          that.lineup.FLEX = that.positions[flexText][index];          
-          if (that.lineup.QB['Game Info'] != that.lineup.FLEX['Game Info']) {
-            return setTimeout(() => {
-              that.generate();
-            }, 0);
-          }
-
+          that.lineup.FLEX = that.positions[flexText][index];
+          //   if (that.lineup.QB['Game Info'] != that.lineup.FLEX['Game Info']) {
+          //     return setTimeout(() => {
+          //       that.generate();
+          //     }, 0);
+          //   }
           playerIds.push(that.lineup.FLEX.ID);
           that.stackCount.push(that.lineup.FLEX['Game Info']);
           getDST();
@@ -319,10 +382,6 @@
           let index = Math.floor(Math.random() * Math.floor(that.positions['DST'].length - 1));
           that.lineup.DST = that.positions['DST'][index];
           playerIds.push(that.lineup.DST.ID);
-          //console.log(that.lineup);
-          //console.log(that.stackCount);
-          //console.log(countUnique(that.stackCount));
-
           validateLineup();
         }
 
@@ -372,15 +431,15 @@
             return setTimeout(() => {
               that.generate();
             }, 0);
-          } 
-        //   else if (that.lineup.QB.Name === 'Josh Allen' || that.lineup.QB.Name === 'Cam Newton') {
-        //     if (countUnique(that.stackCount) >= 6) {
-        //       console.log('Stacking expectations not met ', totalSalary);
-        //       return setTimeout(() => {
-        //         that.generate();
-        //       }, 0);
-        //     }
-        //   } 
+          }
+          //   else if (that.lineup.QB.Name === 'Josh Allen' || that.lineup.QB.Name === 'Cam Newton') {
+          //     if (countUnique(that.stackCount) >= 6) {
+          //       console.log('Stacking expectations not met ', totalSalary);
+          //       return setTimeout(() => {
+          //         that.generate();
+          //       }, 0);
+          //     }
+          //   } 
           else {
             console.log(countUnique(that.stackCount));
             that.lineup['Total Salary'] = totalSalary;
