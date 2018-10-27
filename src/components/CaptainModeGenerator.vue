@@ -1,21 +1,17 @@
 <template>
     <div class="parse">
-        <h1>DraftKings 'Captain Mode' NFL Lineup Generator
-            <b-btn variant="danger" v-b-popover.hover="'Import the .csv for your contest (DraftKings only this week), remove players you dislike, and start generating!'"
+        <h5>DraftKings 'Captain Mode' NFL Lineup Generator
+            <b-btn variant="danger" v-b-popover.hover="'Import the .csv for your contest , remove players you dislike, and start generating!'"
                 title="Instructions">
                 ?
             </b-btn>
-            <h3 class="float-right" style="padding:10px;">
-                <a href="https://neocities.org/site/lineupgenerator">Donate |</a>
-                <a href="https://twitter.com/keepthereporter?lang=en">Follow </a>
-            </h3>
-        </h1>
-        <div class="alert alert-info">
-            <a href="https://lineupgenerator.net/Week1/CaptainModeEaglesFalconsFiltered.csv">
-                Download Week 1 Players (Eagles Falcons) Here:
-            </a>
-            <br> Then import the .csv below (If you are playing a different slate, download the .csv from DK/FanDuel)
-            <br>Remove players that you don't want in your player pool
+            <h5 class="float-right" style="padding:10px;">
+                <a href="https://neocities.org/site/lineupgenerator">Donate if you win </a>
+            </h5>
+        </h5>
+        <div class="alert alert-info">            
+            <br>Import the player list .csv for your contest below (download the .csv from DK/FanDuel)
+            <br>Remove players that you don't want in your player pool (exposure coming soon, for now, modify the .csv to increase exposure to players you like)
             <br>Go to the Lineups tab and start generating lineups
             <br>Export your lineups by clicking 'Download', modify the headers manually, and import them into DraftKings or FanDuel
         </div>
@@ -63,7 +59,7 @@
                 <b-table striped hover :items="position" :fields="playersListFields" v-if="position.length"></b-table>
             </b-tab>
             <b-tab title="Lineups">
-                
+
                 <b-btn @click="generate()">Generate</b-btn>
                 <b-button @click='save' v-bind:variant="theme" download>
                     Download {{lineups.length}} Lineups
@@ -210,7 +206,7 @@
                     playerIds.push(that.lineup.CPT.ID);
                     playerNames.push(that.lineup.CPT.Name);
                     getFlex1();
-                }               
+                }
 
                 function getFlex1() {
                     //console.log('getting flex1')
@@ -272,15 +268,15 @@
                         }
                         return result;
                     }
-                    var checkDupes = removeDuplicate(playerNames);                    
+                    var checkDupes = removeDuplicate(playerNames);
                     var totalSalary =
                         parseInt(that.lineup.CPT.Salary) +
                         parseInt(that.lineup.FLEX1.Salary) +
                         parseInt(that.lineup.FLEX2.Salary) +
                         parseInt(that.lineup.FLEX3.Salary) +
                         parseInt(that.lineup.FLEX4.Salary) +
-                        parseInt(that.lineup.FLEX5.Salary) 
-                        
+                        parseInt(that.lineup.FLEX5.Salary)
+
                     console.log('$' + totalSalary)
                     if (checkDupes.length < 6) {
                         console.log('dupes exist, restarting ', checkDupes.length);
@@ -293,7 +289,7 @@
                         return setTimeout(() => {
                             that.generate();
                         }, 0);
-                    }  else if (totalSalary > 50000) {
+                    } else if (totalSalary > 50000) {
                         console.log('salary cap expectations not met ', totalSalary);
                         return setTimeout(() => {
                             that.generate();

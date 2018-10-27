@@ -10,10 +10,11 @@ sans-serif;
 $primary-color : #2c3e50;
 body {
     font: 100% $muli;
-    font-size:24px;
+    font-size:14px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: $primary-color;
+    margin-top:-5%
 }
 
 h1,

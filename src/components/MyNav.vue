@@ -2,16 +2,16 @@
   <b-navbar toggleable="md" type="dark" v-bind:variant="theme" class="sticky">
     <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
     <b-navbar-brand href="#">
-      <img src="src/assets/logo.png" style="width:25px;">
+      <img src="src/assets/logo.png">
     </b-navbar-brand>
     <b-collapse is-nav id="nav_collapse">
-      <b-navbar-nav>        
+      <b-navbar-nav>
         <b-nav-item to="/DraftKings">DK NFL Lineup Generator</b-nav-item>
       </b-navbar-nav>
-      <b-navbar-nav>        
+      <b-navbar-nav>
         <b-nav-item to="/CaptainMode">DK Captain Mode NFL Lineup Generator</b-nav-item>
       </b-navbar-nav>
-      <b-navbar-nav>        
+      <b-navbar-nav>
         <b-nav-item to="/FanDuel">FanDuel NFL Lineup Generator</b-nav-item>
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
@@ -25,13 +25,6 @@
           <b-dropdown-item href="#" @click="updateTheme('white')" class="bg-white">White</b-dropdown-item>
           <b-dropdown-item href="#" @click="updateTheme('light')" class="bg-light">Light</b-dropdown-item>
         </b-nav-item-dropdown>
-        <!-- <b-nav-item-dropdown right>
-          <template slot="button-content">
-            <em>User</em>
-          </template>
-          <b-dropdown-item href="#">Profile</b-dropdown-item>
-          <b-dropdown-item href="#">Signout</b-dropdown-item>
-        </b-nav-item-dropdown> -->
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>

@@ -1,21 +1,20 @@
 <template>
   <div class="parse">
-    <h1>DraftKings NFL Lineup Generator
-      <b-btn letiant="danger" v-b-popover.hover="'Import the .csv for your contest (DraftKings only this week), remove players you dislike, and start generating!'"
+    <h5>DraftKings NFL Lineup Generator
+      <b-btn letiant="danger" v-b-popover.hover="'Import the .csv for your contest, remove players you dislike, and start generating!'"
         title="Instructions">
         ?
       </b-btn>
-      <h3 class="float-right" style="padding:10px;">
-        <a href="https://neocities.org/site/lineupgenerator">Donate |</a>
-        <a href="https://twitter.com/keepthereporter?lang=en">Follow </a>
-      </h3>
-    </h1>
+      <h5 class="float-right" style="padding:10px;">
+        <a href="https://neocities.org/site/lineupgenerator">Donate if you win</a>
+      </h5>
+    </h5>
     <div class="alert alert-info">
       <a href="https://lineupgenerator.net/Week1/Week1MainSlateFiltered.csv">
-        Download Week 1 Players (Main Slate) Here
+        Download this weeks players (main slate)
       </a>
       <br> Then import the .csv below (If you are playing a different slate, download the .csv from DK/FanDuel)
-      <br>Remove players that you don't want in your player pool
+      <br>Remove players that you don't want in your player pool, increase exposure to players you like
       <br>Go to the Lineups tab and start generating lineups
       <br>Export your lineups by clicking 'Download', modify the headers manually, and import them into DraftKings or FanDuel
     </div>
@@ -30,30 +29,27 @@
       <br> in the same format as the .csv download from DraftKings</label>
     <br>
     <input id="fileInput" type="file" @change="upload" v-bind:letiant="theme">
-
     <div class="body">
     </div>
     <b-tabs v-if="playersList">
       <b-tab title="All Players" active>
-        <b-button @click='savePlayersList' v-bind:letiant="theme" download>
-          Download Player List
-        </b-button>
-        <b-button @click=''>
-          Delete Selected Players
-        </b-button>
-        <b-button @click=''>
-          Increase Selected Exposure
-        </b-button>
-        <label class="pull-right">Select All:
-          <input class="pull-right" type="checkbox">
-        </label>
-
+        <span class="float-right">
+          <b-button @click='savePlayersList' v-bind:letiant="theme" download class="badge badge-info">
+            Download This Player List
+          </b-button>
+          <b-button @click='' class="badge badge-danger">
+            Remove Selected Players
+          </b-button>
+          <b-button @click='' class="badge badge-dark">
+            Increase Selected Exposure
+          </b-button>
+        </span>
         <b-table striped hover :items="playersList" :fields="playersListFields" style="font-size: small;">
           <template slot="delete_btn" slot-scope="row">
-            <b-button size="sm" @click.stop="removePlayer(playersList[row.index])" class="btn btn-danger">
+            <b-button size="sm" @click.stop="removePlayer(playersList[row.index])" class="badge badge-danger">
               Remove
             </b-button>
-            <b-button size="sm" @click.stop="addPlayer(playersList[row.index])" class="btn btn-success">
+            <b-button size="sm" @click.stop="addPlayer(playersList[row.index])" class="badge badge-success">
               Increase Exposure
             </b-button>
             <input type="checkbox" />
@@ -78,7 +74,12 @@
       </b-tab>
       <b-tab title="Lineups">
         <div>
-          <label>Random Flex position this week</label>
+          <label>Select Flex Position:</label>
+          <select v-model="selectedFlex">
+            <option>RB</option>
+            <option>WR</option>
+            <option>TE</option>
+          </select>
         </div>
         <b-btn @click="generate()">Generate</b-btn>
         <b-button @click='save' v-bind:letiant="theme" download>
@@ -137,7 +138,6 @@
           'Total Salary': null
         },
         stackCount: [],
-
       }
     },
     created() {
@@ -336,11 +336,11 @@
         function getWR3() {
           let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
           that.lineup.WR3 = that.positions['WR'][index];
-          if (that.lineup.WR3['Game Info'] != that.lineup.WR2['Game Info']) {
-            return setTimeout(() => {
-              that.generate();
-            }, 0);
-          }
+          //   if (that.lineup.WR3['Game Info'] != that.lineup.WR2['Game Info']) {
+          //     return setTimeout(() => {
+          //       that.generate();
+          //     }, 0);
+          //   }
           playerIds.push(that.lineup.WR3.ID);
           that.stackCount.push(that.lineup.WR3['Game Info']);
           getTE();
@@ -355,26 +355,9 @@
         }
 
         function getFLEX() {
-          let flextInt = 0 //Math.floor(Math.random() * 3);
-          let flexText = ''
-          if (flextInt === 0) {
-            flexText = 'RB'
-          }
-          if (flextInt === 1) {
-            flexText = 'WR'
-          }
-          if (flextInt === 2) {
-            flexText = 'TE'
-          }
-          let index = Math.floor(Math.random() * Math.floor(that.positions[flexText].length - 1));
-          that.lineup.FLEX = that.positions[flexText][index];
-          //   if (that.lineup.QB['Game Info'] != that.lineup.FLEX['Game Info']) {
-          //     return setTimeout(() => {
-          //       that.generate();
-          //     }, 0);
-          //   }
+          let index = Math.floor(Math.random() * Math.floor(that.positions[that.selectedFlex].length - 1));
+          that.lineup.FLEX = that.positions[that.selectedFlex][index];
           playerIds.push(that.lineup.FLEX.ID);
-          that.stackCount.push(that.lineup.FLEX['Game Info']);
           getDST();
         }
 
@@ -485,7 +468,6 @@
   .body {
     display: flex;
     justify-content: center;
-    margin-top: 30px;
   }
 
   .entry {
@@ -503,9 +485,7 @@
   }
 
   .parse {
-    margin-top: 7vh;
     margin: 3%;
+    font-size: 12px;
   }
-
 </style>
-
