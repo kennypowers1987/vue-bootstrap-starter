@@ -73,7 +73,7 @@
         <b-table striped hover :items="position" :fields="playersListFields" v-if="position.length"></b-table>
       </b-tab>
       <b-tab title="Lineups">
-        <div>
+        <div class="row">
           <label>Select Flex Position:</label>
           <select v-model="selectedFlex">
             <option>RB</option>
@@ -81,10 +81,18 @@
             <option>TE</option>
           </select>
         </div>
-        <b-btn @click="generate()">Generate</b-btn>
+        <b-btn @click="generate(); countClicks()">Generate
+
+        </b-btn>
         <b-button @click='save' v-bind:letiant="theme" download>
           Download {{lineups.length}} Lineups
         </b-button>
+        <div class="row col-xs-12 alert alert-info" style="margin:5px" v-if="showSpinner">
+          <vue-simple-spinner size="medium"></vue-simple-spinner>
+          <div class="col-xs-12"> Currently working on {{generateCount - lineups.length}} lineups. Keep clicking "Generate" to generate more. Modify
+            your player exposures to speed things up.</div>
+
+        </div>
         <b-table striped hover :items="lineups" v-if="lineups.length"></b-table>
       </b-tab>
     </b-tabs>
@@ -118,6 +126,8 @@
         positions: {},
         lineups: [],
         fullLineups: [],
+        showSpinner: false,
+        generateCount: 0,
         exposure: {
           QB: [],
           RB: [],
@@ -144,6 +154,9 @@
       this.$bus.$on("theme-changed", $event => {
         this.updateTheme();
       });
+      if (this.generateCount > this.lineups.length) {
+        this.showSpinner = true;
+      }
     },
     methods: {
       drawTeams() {
@@ -271,7 +284,16 @@
       setPosition(pos) {
         this.position = this.positions[pos];
       },
+      countClicks() {
+        this.generateCount = this.generateCount + 1;
+      },
       generate() {
+        if (this.generateCount > this.lineups.length) {
+          this.showSpinner = true;
+        }
+        else {
+          this.showSpinner = false;
+        }
         let that = this;
         let playerIds = [];
         that.stackCount = [];
@@ -290,7 +312,7 @@
         }
 
         function getRB1() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['RB'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions['RB'].length));
           that.lineup.RB1 = that.positions['RB'][index];
           playerIds.push(that.lineup.RB1.ID);
           that.stackCount.push(that.lineup.RB1['Game Info']);
@@ -298,7 +320,7 @@
         }
 
         function getRB2() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['RB'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions['RB'].length));
           that.lineup.RB2 = that.positions['RB'][index];
           playerIds.push(that.lineup.RB2.ID);
           that.stackCount.push(that.lineup.RB2['Game Info']);
@@ -306,35 +328,33 @@
         }
 
         function getWR1() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length));
           that.lineup.WR1 = that.positions['WR'][index];
           if (that.lineup.WR1.TeamAbbrev != that.lineup.QB.TeamAbbrev) {
             return setTimeout(() => {
               that.generate();
             }, 0);
           }
-
-
           playerIds.push(that.lineup.WR1.ID);
           that.stackCount.push(that.lineup.WR1['Game Info']);
           getWR2();
         }
 
         function getWR2() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length));
           that.lineup.WR2 = that.positions['WR'][index];
-          if (that.lineup.WR2['Game Info'] != that.lineup.WR1['Game Info']) {
-            return setTimeout(() => {
-              that.generate();
-            }, 0);
-          }
+          // if (that.lineup.WR2['Game Info'] != that.lineup.WR1['Game Info']) {
+          //   return setTimeout(() => {
+          //     that.generate();
+          //   }, 0);
+          // }
           playerIds.push(that.lineup.WR2.ID);
           that.stackCount.push(that.lineup.WR2['Game Info']);
           getWR3();
         }
 
         function getWR3() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length));
           that.lineup.WR3 = that.positions['WR'][index];
           //   if (that.lineup.WR3['Game Info'] != that.lineup.WR2['Game Info']) {
           //     return setTimeout(() => {
@@ -347,7 +367,7 @@
         }
 
         function getTE() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['TE'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions['TE'].length));
           that.lineup.TE = that.positions['TE'][index];
           playerIds.push(that.lineup.TE.ID);
           that.stackCount.push(that.lineup.TE['Game Info']);
@@ -355,14 +375,14 @@
         }
 
         function getFLEX() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions[that.selectedFlex].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions[that.selectedFlex].length));
           that.lineup.FLEX = that.positions[that.selectedFlex][index];
           playerIds.push(that.lineup.FLEX.ID);
           getDST();
         }
 
         function getDST() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['DST'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions['DST'].length));
           that.lineup.DST = that.positions['DST'][index];
           playerIds.push(that.lineup.DST.ID);
           validateLineup();
@@ -402,7 +422,7 @@
               that.generate();
             }, 0);
 
-          } else if (totalSalary < 49700) {
+          } else if (totalSalary < 49900) {
             console.log('salary cap expectations not met ', totalSalary);
             console.log(that.lineup.QB.Name)
             return setTimeout(() => {
@@ -453,7 +473,12 @@
               'DST': that.lineup.DST.ID,
             };
             that.fullLineups.unshift(lineup);
-
+            if (that.generateCount > that.lineups.length) {
+              that.showSpinner = true;
+            }
+            else {
+              that.showSpinner = false;
+            }
           }
         }
         getQB();

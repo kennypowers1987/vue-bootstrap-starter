@@ -284,7 +284,7 @@
                             that.generate();
                         }, 0);
 
-                    } else if (totalSalary < 35000) {
+                    } else if (totalSalary < 49000) {
                         console.log('salary cap expectations not met ', totalSalary);
                         return setTimeout(() => {
                             that.generate();
