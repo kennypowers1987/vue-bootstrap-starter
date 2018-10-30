@@ -1,6 +1,7 @@
 import draftkings from "../components/DraftKingsGenerator.vue";
 import fanduel  from "../components/FanDuelGenerator.vue";
 import captainmode  from "../components/CaptainModeGenerator.vue";
+import tiers from "../components/TiersGeneratorDK.vue";
 
 const DraftKings = {
 	//template: '#modals',
@@ -19,6 +20,11 @@ const CaptainMode = {
 	routes,
 	render: h => h(captainmode)
 };
+const Tiers = {
+	//template: '#modals',
+	routes,
+	render: h => h(tiers)
+};
 const routes = [	
     {
 		path: "/DraftKings",
@@ -31,6 +37,10 @@ const routes = [
     {
 		path: "/CaptainMode",
 		component: CaptainMode
+    },
+    {
+		path: "/Tiers",
+		component: Tiers
 	},
 	{
 		path: "*",
