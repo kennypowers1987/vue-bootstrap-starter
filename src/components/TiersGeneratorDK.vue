@@ -56,11 +56,14 @@
         <b-table striped hover :items="position" :fields="playersListFields" v-if="position.length"></b-table>
       </b-tab>
       <b-tab title="Lineups">
-
+        <h5 v-if="lineups.length">Exposure</h5>
+        <pre v-if="lineups.length">{{exposures}}</pre>
         <b-btn @click="generate()">Generate</b-btn>
         <b-button @click='save' v-bind:variant="theme" download>
           Download {{lineups.length}} Lineups
         </b-button>
+        
+        <h5 v-if="lineups.length">Lineups</h5>
         <b-table striped hover :items="lineups" v-if="lineups.length"></b-table>
 
       </b-tab>
@@ -104,7 +107,9 @@
           'T7': null,
           'T8': null,
           'Total Salary': null
-        }
+        },
+        counts: {},
+        exposures: {},
       }
     },
     created() {
@@ -189,6 +194,25 @@
       setPosition(pos) {
         this.position = this.positions[pos];
       },
+      shuffleArray(array) {
+        for (var i = array.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = array[i];
+          array[i] = array[j];
+          array[j] = temp;
+        }
+      },
+      calculateExposure(id) {
+        var that = this;
+        if (!that.counts[id]) {
+          that.counts[id] = 1
+        }
+        else {
+          that.counts[id] = that.counts[id] + 1
+        }
+        that.exposures[id] = ((that.counts[id] / (that.lineups.length + 1)).toFixed(3)) * 100 + "%"
+      },
+
       generate() {
         var that = this;
         var playerIds = [];
@@ -204,7 +228,6 @@
           'T8': null
         }
         var getT1 = function () {
-          //console.log('getting T1');          
           let index = Math.floor(Math.random() * Math.floor(that.positions['T1'].length));
           if (!that.positions['T1'][index].ID) {
             return that.generate();
@@ -216,7 +239,6 @@
         }
 
         var getT2 = function () {
-          //console.log('getting T2')          
           let index = Math.floor(Math.random() * Math.floor(that.positions['T2'].length));
           if (!that.positions['T2'][index].ID) {
             return that.generate();
@@ -227,13 +249,13 @@
           getT3();
         }
         var getT3 = function () {
-          //console.log('getting T3')         
           that.positions['T3'].forEach(function (player, i) {
-            if ((player.Position === "WR" || player.Position === "TE") && (player.TeamAbbrev === that.lineup.T1.TeamAbbrev ||
-                player.TeamAbbrev === that.lineup.T2.TeamAbbrev)) {
+            if ((player.Position === "WR" || player.Position === "TE") && (player["Game Info"] === that.lineup.T1["Game Info"] ||
+              player["Game Info"] === that.lineup.T2["Game Info"])) {
               that.lineup.T3 = player;
               playerIds.push(that.lineup.T3.ID);
               playerNames.push(that.lineup.T3.Name);
+              that.shuffleArray(that.positions['T3'])
               return getT4();
             }
           });
@@ -245,19 +267,18 @@
             that.lineup.T3 = that.positions['T3'][index];
             playerIds.push(that.lineup.T3.ID);
             playerNames.push(that.lineup.T3.Name);
-            console.log(that.lineup);
             getT4();
           }
 
         }
         var getT4 = function () {
-          //console.log('getting T4')         
           that.positions['T4'].forEach(function (player, i) {
-            if ((player.Position === "WR" || player.Position === "TE") && (player.TeamAbbrev === that.lineup.T1.TeamAbbrev ||
-                player.TeamAbbrev === that.lineup.T2.TeamAbbrev)) {
+            if ((player.Position === "WR" || player.Position === "TE") && (player["Game Info"] === that.lineup.T1["Game Info"] ||
+              player["Game Info"] === that.lineup.T2["Game Info"])) {
               that.lineup.T4 = player;
               playerIds.push(that.lineup.T4.ID);
               playerNames.push(that.lineup.T4.Name);
+              that.shuffleArray(that.positions['T4'])
               return getT5();
             }
           });
@@ -273,20 +294,19 @@
           }
         }
         var getT5 = function () {
-          //console.log('getting T5')
-
           that.positions['T5'].forEach(function (player, i) {
-            if ((player.Position === "WR" || player.Position === "TE") && (player.TeamAbbrev === that.lineup.T1.TeamAbbrev ||
-                player.TeamAbbrev === that.lineup.T2.TeamAbbrev)) {
+            if ((player.Position === "WR" || player.Position === "TE") && (player["Game Info"] === that.lineup.T1["Game Info"] ||
+              player["Game Info"] === that.lineup.T2["Game Info"])) {
               that.lineup.T5 = player;
               playerIds.push(that.lineup.T5.ID);
               playerNames.push(that.lineup.T5.Name);
+              that.shuffleArray(that.positions['T5'])
               return getT6();
             }
           });
           if (!that.lineup.T5) {
             let index = Math.floor(Math.random() * Math.floor(that.positions['T5'].length));
-            if (!that.positions['T5'][index].ID) {              
+            if (!that.positions['T5'][index].ID) {
               return that.generate();
             }
             that.lineup.T5 = that.positions['T5'][index];
@@ -296,36 +316,23 @@
           }
         }
         var getT6 = function () {
-          //console.log('getting T6')
-          that.positions['T6'].forEach(function (player, i) {
-            if ((player.Position === "WR" || player.Position === "TE") && (player.TeamAbbrev === that.lineup.T1.TeamAbbrev ||
-                player.TeamAbbrev === that.lineup.T2.TeamAbbrev)) {
-              that.lineup.T6 = player;
-              playerIds.push(that.lineup.T6.ID);
-              playerNames.push(that.lineup.T6.Name);
-              return getT7();
-            }
-          });
-          if (!that.lineup.T6) {
-            let index = Math.floor(Math.random() * Math.floor(that.positions['T6'].length));
-            if (!that.positions['T6'][index].ID) {
-              
-              return that.generate();
-            }
-            that.lineup.T6 = that.positions['T6'][index];
-            playerIds.push(that.lineup.T6.ID);
-            playerNames.push(that.lineup.T6.Name);
-            getT7();
+          let index = Math.floor(Math.random() * Math.floor(that.positions['T6'].length));
+          if (!that.positions['T6'][index].ID) {
+            return that.generate();
           }
+          that.lineup.T6 = that.positions['T6'][index];
+          playerIds.push(that.lineup.T6.ID);
+          playerNames.push(that.lineup.T6.Name);
+          getT7();
         }
         var getT7 = function () {
-          //console.log('getting T7')
           that.positions['T7'].forEach(function (player, i) {
-            if ((player.Position === "WR" || player.Position === "TE") && (player.TeamAbbrev === that.lineup.T1.TeamAbbrev ||
-                player.TeamAbbrev === that.lineup.T2.TeamAbbrev)) {
+            if ((player.Position === "WR" || player.Position === "TE") && (player["Game Info"] === that.lineup.T1["Game Info"] ||
+              player["Game Info"] === that.lineup.T2["Game Info"])) {
               that.lineup.T7 = player;
               playerIds.push(that.lineup.T7.ID);
               playerNames.push(that.lineup.T7.Name);
+              that.shuffleArray(that.positions['T7'])
               return getT8()
             }
           });
@@ -335,26 +342,25 @@
               return that.generate()
             }
             that.lineup.T7 = that.positions['T7'][index];
-            playerIds.push(that.lineup.T7.TeamAbbrev);
+            playerIds.push(that.lineup.T7["Game Info"]);
             playerNames.push(that.lineup.T7.Name);
             getT8()
           }
         }
         var getT8 = function () {
-          //console.log('getting T8')
           that.positions['T8'].forEach(function (player, i) {
-            if ((player.Position === "WR" || player.Position === "TE") && (player.TeamAbbrev === that.lineup.T1.TeamAbbrev ||
-                player.TeamAbbrev === that.lineup.T2.TeamAbbrev)) {
+            if ((player.Position === "WR" || player.Position === "TE") && (player["Game Info"] === that.lineup.T1["Game Info"] ||
+              player["Game Info"] === that.lineup.T2["Game Info"])) {
               that.lineup.T8 = player;
               playerIds.push(that.lineup.T8.ID);
               playerNames.push(that.lineup.T8.Name);
+              that.shuffleArray(that.positions['T8'])
               return validateLineup()
             }
           });
           if (!that.lineup.T8) {
             let index = Math.floor(Math.random() * Math.floor(that.positions['T8'].length));
             if (!that.positions['T8'][index].ID) {
-              console.log('T8')
               return that.generate();
             }
             that.lineup.T8 = that.positions['T8'][index];
@@ -362,7 +368,6 @@
             playerNames.push(that.lineup.T8.Name);
           }
           validateLineup();
-
         }
 
         var validateLineup = function () {
@@ -376,6 +381,14 @@
             'T7': that.lineup.T7.Name + " " + that.lineup.T7['TeamAbbrev'],
             'T8': that.lineup.T8.Name + " " + that.lineup.T8['TeamAbbrev'],
           }
+          that.calculateExposure(that.lineup.T1.Name)
+          that.calculateExposure(that.lineup.T2.Name)
+          that.calculateExposure(that.lineup.T3.Name)
+          that.calculateExposure(that.lineup.T4.Name)
+          that.calculateExposure(that.lineup.T5.Name)
+          that.calculateExposure(that.lineup.T6.Name)
+          that.calculateExposure(that.lineup.T7.Name)
+          that.calculateExposure(that.lineup.T8.Name)
           that.lineups.unshift(lineup);
           lineup = {
             'T1': that.lineup.T1.ID,
@@ -432,6 +445,4 @@
     margin-top: 7vh;
     margin: 3%;
   }
-
 </style>
-
