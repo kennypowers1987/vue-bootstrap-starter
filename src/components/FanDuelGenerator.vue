@@ -9,12 +9,13 @@
         <a href="https://neocities.org/site/lineupgenerator">Donate if you win</a>
       </h5>
     </h5>
-    <div class="alert alert-info">      
+    <div class="alert alert-info">
       <br> Import the players list .csv for your contest below (download the .csv from DK/FanDuel)
-      <br>Remove players that you don't want in your player pool (exposure coming soon, for now, modify the .csv to increase exposure to players you like)
+      <br>Remove players that you don't want in your player pool (exposure coming soon, for now, modify the .csv to increase
+      exposure to players you like)
       <br>Go to the Lineups tab and start generating lineups
       <br>Export your lineups by clicking 'Download' , modify the headers manually, and import them into DraftKings or FanDuel
-      </div>
+    </div>
     <div class="alert alert-danger">
       When you download your lineups, in the downloaded .csv, change the headers to 'QB, RB, RB, WR, WR, WR, TE, FLEX, DEF' or
       you won't be able to upload it to FanDuel.
@@ -59,16 +60,11 @@
       </b-tab>
       <b-tab title="Lineups">
         <div>
-          <label>Select Flex Position:</label>
-          <select v-model="selectedFlex">
-            <option>RB</option>
-            <option>WR</option>
-            <option>TE</option>
-          </select>
+
         </div>
         <b-btn @click="generate()">Generate</b-btn>
         <b-button @click='save' v-bind:variant="theme" download>
-          Download
+          Download {{lineups.length}} Lineups
         </b-button>
         <b-table striped hover :items="lineups" v-if="lineups.length"></b-table>
       </b-tab>
@@ -93,7 +89,7 @@
     name: 'fanDuel',
     data() {
       return {
-        selectedFlex: 'RB',
+        selectedFlex: '',
         playersList: null,
         theme: Vue.localStorage.get("theme"),
         playersListFields: [],
@@ -207,72 +203,93 @@
       generate() {
         var that = this;
         var playerIds = [];
+        var teams = [];
 
         function getQB() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['QB'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions['QB'].length));
           //that.lineup.QB = (({ Name, Salary, Position }) => ({ Name, Salary, Position }))(that.positions['QB'][index])
           that.lineup.QB = that.positions['QB'][index];
           playerIds.push(that.lineup.QB.Id);
+          teams.push(that.lineup.QB.Team);
           getRB1();
         }
 
         function getRB1() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['RB'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions['RB'].length));
           that.lineup.RB1 = that.positions['RB'][index];
           playerIds.push(that.lineup.RB1.Id);
+          teams.push(that.lineup.RB1.Team);
           getRB2();
         }
 
         function getRB2() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['RB'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions['RB'].length));
           that.lineup.RB2 = that.positions['RB'][index];
           playerIds.push(that.lineup.RB2.Id);
+          teams.push(that.lineup.RB2.Team);
           getWR1();
         }
 
         function getWR1() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length));
           that.lineup.WR1 = that.positions['WR'][index];
           if (that.lineup.WR1.Team != that.lineup.QB.Team) {
             return that.generate();
           }
           playerIds.push(that.lineup.WR1.Id);
+          teams.push(that.lineup.WR1.Team);
           getWR2();
         }
 
         function getWR2() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length));
           that.lineup.WR2 = that.positions['WR'][index];
           playerIds.push(that.lineup.WR2.Id);
+          teams.push(that.lineup.WR2.Team);
           getWR3();
         }
 
         function getWR3() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions['WR'].length));
           that.lineup.WR3 = that.positions['WR'][index];
           playerIds.push(that.lineup.WR3.Id);
+          teams.push(that.lineup.WR3.Team);
           getTE();
         }
 
         function getTE() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['TE'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions['TE'].length));
           that.lineup.TE = that.positions['TE'][index];
           playerIds.push(that.lineup.TE.Id);
+          teams.push(that.lineup.TE.Team);
           getFLEX();
         }
 
         function getFLEX() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions[that.selectedFlex].length - 1));
+          let index = Math.floor(Math.random() * 10) + 1
+          if (index == (1 || 2 || 3)
+          ) {
+            that.selectedFlex = 'WR'
+          }
+
+          if (index == (4 || 5)) {
+            that.selectedFlex = 'TE'
+          }
+          if (index == (6 || 7 || 8 || 9 || 10)) {
+            that.selectedFlex = 'RB'
+          }
+          index = Math.floor(Math.random() * Math.floor(that.positions[that.selectedFlex].length));
           that.lineup.FLEX = that.positions[that.selectedFlex][index];
           playerIds.push(that.lineup.FLEX.Id);
+          teams.push(that.lineup.FLEX.Team);
           getD();
         }
 
         function getD() {
-          let index = Math.floor(Math.random() * Math.floor(that.positions['D'].length - 1));
+          let index = Math.floor(Math.random() * Math.floor(that.positions['D'].length));
           that.lineup.D = that.positions['D'][index];
           playerIds.push(that.lineup.D.Id);
-          console.log(that.lineup);
+          teams.push(that.lineup.D.Team);
           validateLineup();
         }
 
@@ -302,12 +319,21 @@
             parseInt(that.lineup.FLEX.Salary) +
             parseInt(that.lineup.D.Salary);
           console.log('$' + totalSalary)
-          if (checkDupes.length < 9) {
+          var counts = {};
+          teams.forEach(function (x) { counts[x] = (counts[x] || 0) + 1; });
+          console.log(counts);
+          if (counts['NE'] > 4 || counts['KC'] > 4 || counts['LAR'] > 4 || counts['NO'] > 4) {
+            console.log('more than 4 players on a team ');
+            return setTimeout(() => {
+              that.generate();
+            }, 0);
+          }
+          else if (checkDupes.length < 9) {
             console.log('dupes exist, restarting ', checkDupes.length);
             return setTimeout(() => {
               that.generate();
             }, 0);
-          } else if (totalSalary < 55000) {
+          } else if (totalSalary < 58900) {
             console.log('salary cap expectations not met ', totalSalary);
             return setTimeout(() => {
               that.generate();
@@ -332,6 +358,8 @@
               'Total Salary': totalSalary
             }
             that.lineups.unshift(lineup);
+            console.log(lineup);
+            console.log(teams);
             lineup = {
               'QB': that.lineup.QB.Id,
               'RB1': that.lineup.RB1.Id,

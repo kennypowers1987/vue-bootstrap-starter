@@ -444,12 +444,7 @@
               that.generate();
             }, 0);
           }
-          else if (that.lineup.QB.Name === ("Patrick Mahomes" || "Jared Goff" || "Nick Mullens" || "Derek Carr") && that.stackCount < 3) {
-            return setTimeout(() => {
-              that.generate();
-            }, 0);
-          }
-          else if (that.stackCount < 1) {
+          else if (that.stackCount < 4) {
             return setTimeout(() => {
               that.generate();
             }, 0);
